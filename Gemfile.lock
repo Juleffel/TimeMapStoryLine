@@ -121,14 +121,14 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  coffee-rails (~> 4.0.0)
+  coffee-rails
   debugger
-  jbuilder (~> 1.2)
+  jbuilder
   jquery-rails
-  rails (= 4.0.0)
-  sass-rails (~> 4.0.0)
+  rails
+  sass-rails
   sdoc
   sqlite3
   therubyracer
   turbolinks
-  uglifier (>= 1.3.0)
+  uglifier
