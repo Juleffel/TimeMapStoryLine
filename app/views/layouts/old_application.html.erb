@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= content_for?(:title) ? yield(:title) : "Galerie Imag" %></title>
+    <%= csrf_meta_tags %>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
+    <![endif]-->
+
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic' rel='stylesheet' type='text/css'>
+    
+    <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
+
+    <!-- For third-generation iPad with high-resolution Retina display: -->
+    <!-- Size should be 144 x 144 pixels -->
+    <%= favicon_link_tag 'images/apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144' %>
+
+    <!-- For iPhone with high-resolution Retina display: -->
+    <!-- Size should be 114 x 114 pixels -->
+    <%= favicon_link_tag 'images/apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114' %>
+
+    <!-- For first- and second-generation iPad: -->
+    <!-- Size should be 72 x 72 pixels -->
+    <%= favicon_link_tag 'images/apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72' %>
+
+    <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+    <!-- Size should be 57 x 57 pixels -->
+    <%= favicon_link_tag 'images/apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png' %>
+
+    <!-- For all other devices -->
+    <!-- Size should be 32 x 32 pixels -->
+    <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
+  </head>
+  <body>
+    <% unless @without_navbar %>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/">TimEMapStoryLine</a>
+          <div class="collapse nav-collapse">
+            <ul class="nav">
+              <li class="<%= if current_page?(controller: 'home') then 'active' end %>">
+                <%= link_to root_path do  %>
+                  &nbsp;&nbsp;Home&nbsp;&nbsp;
+                  <span class='nav-description'>la carte</span>
+                <% end %>
+              </li>
+              <li class="<%= if @watching_cerebro then 'active' end %>">
+                <%= link_to projects_path do %>
+                  Cerebro
+                  <span class='nav-description'>liens des personnages</span>
+                <% end %>
+              </li>
+              <% if @current_user %>
+                <li class="dropdown <%= if @watching_my_profil || @watching_my_characters then ' active ' end %>">
+                  <%= link_to '#' do %>
+                    &nbsp;&nbsp;&nbsp;<span class='icon-user'></span>&nbsp;&nbsp;&nbsp;
+                    <span class='nav-description'>Mon compte</span>
+                    <b class="caret"></b>
+                  <% end %>
+                  <ul class="dropdown-menu">
+                    <li class="<%= if @watching_my_profil then ' active ' end %>">
+                      <%= link_to @current_user do %>
+                        Mon profil
+                      <% end %>
+                    </li>
+                    <li class="<%= if @watching_my_characters then ' active ' end %>">
+                      <%= link_to user_characters_path(@current_user) do %>
+                        Mes projets
+                      <% end %>
+                    </li>
+                    <li>
+                      <%= link_to logout_url do %>
+                        Me déconnecter
+                      <% end %>
+                    </li>
+                  </ul>
+                </li>
+                <% if @current_user.admin? %>
+                  <li class="<%= if @administrating then 'active' end %>">
+                    <%= link_to root_path do %>
+                      Administration
+                      <span class='nav-description'>par ici !</span>
+                    <% end %>
+                  </li>
+                <% end %>
+              <% else %>
+                <li>
+                  <%= link_to redirect_login_url do %>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='icon-user'></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class='nav-description'>Me connecter</span>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+    
+    <header id="overview" class="jumbotron subhead">
+      <div class="container">
+        <h1>
+          Time Map Story Line
+        </h1>
+        <p class="lead">
+          Welcome in the new era of the RPG Forum
+        </p>
+      </div>
+    </header>
+    <% end %>
+
+    <div class="container-fluid">
+      <%= bootstrap_flash %>
+      <%= yield %>
+    </div>
+    
+    <% unless @without_navbar %>
+    <footer class="footer">
+      <div id="gototop" class="container">
+        <a href="#"><i class="icon-chevron-up"></i></a>
+      </div>
+      
+      <div class="container">
+        <p>
+          <% if @current_user then %>
+          Logged as <%= @current_user.username %>. <%= link_to 'Me déconnecter', logout_url %>.
+          <% else %>
+          <%= link_to 'Me connecter', login_url %>
+          <% end %>
+        </p>
+        <p>
+          <a href="http://grenoble-inp.fr">&copy; Grenoble INP 2013</a>
+        </p>
+      </div>
+    </footer>
+    <% end %>
+
+    <!-- Javascripts
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <%= javascript_include_tag "application", "data-turbolinks-track" => true
+    %>
+
+  </body>
+</html>

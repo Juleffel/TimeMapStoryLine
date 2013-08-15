@@ -1,0 +1,23 @@
+<ul class="nav navbar-nav">
+  <li>
+    <%= link_to "Home", root_path, :class => 'brand' %>
+  </li>
+  <% if user_signed_in? %>
+    <li>
+    <%= link_to('Me déconnecter', destroy_user_session_path, :method=>'delete') %>
+    </li>
+  <% else %>
+    <li>
+    <%= link_to('Me connecter', new_user_session_path)  %>
+    </li>
+  <% end %>
+  <% if user_signed_in? %>
+    <li>
+    <%= link_to('Mon profil', edit_user_registration_path) %>
+    </li>
+  <% else %>
+    <li>
+    <%= link_to('M\'inscrire', new_user_registration_path)  %>
+    </li>
+  <% end %>
+</ul>

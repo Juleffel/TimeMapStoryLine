@@ -43,3 +43,12 @@ end
 
 # Use debugger
 gem 'debugger', group: [:development, :test]
+
+gem 'rails-i18n'
+gem 'devise'
+gem "cancan"
+
+gem "jquery-ui-bootstrap-rails-asset", :github => "Juleffel/jquery-ui-bootstrap-rails-asset"
+gem 'bootstrap-sass', :github => 'thomas-mcdonald/bootstrap-sass', :branch => '3'
+gem 'simple_form'
+

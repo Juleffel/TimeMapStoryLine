@@ -1,14 +1,45 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>TimeMapStoryLine</title>
-  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-
-<%= yield %>
-
-</body>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= content_for?(:title) ? yield(:title) : "TimeMapStoryLine" %></title>
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "TimeMapStoryLine" %>">
+    
+    <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
+    <%= csrf_meta_tags %>
+    
+    <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
+  </head>
+  <body>
+    <nav class="navbar navbar-fixed-top" role="navigation">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">TimeMapStoryLine</a>
+      </div>
+      <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <%= render 'layouts/navigation' %>
+      </div>
+    </nav>
+    <main role="main">
+      <div class="container">
+        <div class="content">
+           <div class="row">
+            <div class="span12">
+              <%= render 'layouts/messages' %>
+              <%= yield %>
+            </div>
+          </div>
+          <footer>
+          </footer>
+        </div>
+      </div>
+    </main>
+  </body>
 </html>
