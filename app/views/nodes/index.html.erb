@@ -1,0 +1,43 @@
+<h1>Listing nodes</h1>
+
+<%= render "nodes/map" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Longitude</th>
+      <th>Latitude</th>
+      <th>Title</th>
+      <th>Resume</th>
+      <th>Begin at</th>
+      <th>End at</th>
+      <th>Topic</th>
+      <th>Characters</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @nodes.each do |node| %>
+      <tr>
+        <td><%= node.longitude %></td>
+        <td><%= node.latitude %></td>
+        <td><%= node.title %></td>
+        <td><%= node.resume %></td>
+        <td><%= node.begin_at %></td>
+        <td><%= node.end_at %></td>
+        <td><%= node.topic %></td>
+        <td><%= node.characters.join(' & ') %></td>
+        <td><%= link_to 'Show', node %></td>
+        <td><%= link_to 'Edit', edit_node_path(node) %></td>
+        <td><%= link_to 'Destroy', node, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Node', new_node_path %>

@@ -1,0 +1,37 @@
+<h1>Listing links</h1>
+
+<%= render "links/cerebro"%>
+
+<table>
+  <thead>
+    <tr>
+      <th>From character</th>
+      <th>To character</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Force</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @links.each do |link| %>
+      <tr>
+        <td><%= link.from_character %></td>
+        <td><%= link.to_character %></td>
+        <td><%= link.title %></td>
+        <td><%= link.description %></td>
+        <td><%= link.force %></td>
+        <td><%= link_to 'Show', link %></td>
+        <td><%= link_to 'Edit', edit_link_path(link) %></td>
+        <td><%= link_to 'Destroy', link, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Link', new_link_path %>

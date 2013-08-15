@@ -14,5 +14,7 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require jquery-ui-bootstrap
-//= require turbolinks
+//= require leaflet
+//= require sigma
+// require turbolinks
 //= require_tree .

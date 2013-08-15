@@ -1,0 +1,53 @@
+<h1>Listing characters</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>First name</th>
+      <th>Last name</th>
+      <th>Birth date</th>
+      <th>Birth place</th>
+      <th>Sex</th>
+      <th>Avatar url</th>
+      <th>Avatar name</th>
+      <th>Copyright</th>
+      <th>Topic</th>
+      <th>Story</th>
+      <th>Resume</th>
+      <th>Small rp</th>
+      <th>Anecdote</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @characters.each do |character| %>
+      <tr>
+        <td><%= character.user %></td>
+        <td><%= character.first_name %></td>
+        <td><%= character.last_name %></td>
+        <td><%= character.birth_date %></td>
+        <td><%= character.birth_place %></td>
+        <td><%= character.sex %></td>
+        <td><%= character.avatar_url %></td>
+        <td><%= character.avatar_name %></td>
+        <td><%= character.copyright %></td>
+        <td><%= character.topic %></td>
+        <td><%= character.story %></td>
+        <td><%= character.resume %></td>
+        <td><%= character.small_rp %></td>
+        <td><%= character.anecdote %></td>
+        <td><%= link_to 'Show', character %></td>
+        <td><%= link_to 'Edit', edit_character_path(character) %></td>
+        <td><%= link_to 'Destroy', character, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Character', new_character_path %>

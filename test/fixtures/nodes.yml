@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  longitude: 1.5
+  latitude: 1.5
+  title: MyText
+  resume: MyText
+  topic_id: 
+
+two:
+  longitude: 1.5
+  latitude: 1.5
+  title: MyText
+  resume: MyText
+  topic_id: 

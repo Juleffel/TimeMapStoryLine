@@ -1,0 +1,24 @@
+<%= simple_form_for(@character) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.association :user %>
+    <%= f.input :first_name %>
+    <%= f.input :last_name %>
+    <%= f.input :birth_date %>
+    <%= f.input :birth_place %>
+    <%= f.input :sex %>
+    <%= f.input :avatar_url %>
+    <%= f.input :avatar_name %>
+    <%= f.input :copyright %>
+    <%= f.association :topic %>
+    <%= f.input :story %>
+    <%= f.input :resume %>
+    <%= f.input :small_rp %>
+    <%= f.input :anecdote %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

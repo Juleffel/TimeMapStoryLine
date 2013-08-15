@@ -50,5 +50,9 @@ gem "cancan"
 
 gem "jquery-ui-bootstrap-rails-asset", :github => "Juleffel/jquery-ui-bootstrap-rails-asset"
 gem 'bootstrap-sass', :github => 'thomas-mcdonald/bootstrap-sass', :branch => '3'
-gem 'simple_form'
+gem 'simple_form', :github => 'plataformatec/simple_form'
 
+gem "active_model_serializers"
+
+gem 'cloudmade'
+gem 'leaflet-rails'

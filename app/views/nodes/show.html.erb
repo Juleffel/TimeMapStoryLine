@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Longitude:</strong>
+  <%= @node.longitude %>
+</p>
+
+<p>
+  <strong>Latitude:</strong>
+  <%= @node.latitude %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @node.title %>
+</p>
+
+<p>
+  <strong>Resume:</strong>
+  <%= @node.resume %>
+</p>
+
+<p>
+  <strong>Begin at:</strong>
+  <%= @node.begin_at %>
+</p>
+
+<p>
+  <strong>End at:</strong>
+  <%= @node.end_at %>
+</p>
+
+<p>
+  <strong>Topic:</strong>
+  <%= @node.topic %>
+</p>
+
+<p>
+  <strong>Characters:</strong>
+  <%= @node.characters.map(&:to_s).join(' & ') %>
+</p>
+
+<%= link_to 'Edit', edit_node_path(@node) %> |
+<%= link_to 'Back', nodes_path %>

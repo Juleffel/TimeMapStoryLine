@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>From character:</strong>
+  <%= @link.from_character %>
+</p>
+
+<p>
+  <strong>To character:</strong>
+  <%= @link.to_character %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @link.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @link.description %>
+</p>
+
+<p>
+  <strong>Force:</strong>
+  <%= @link.force %>
+</p>
+
+<%= link_to 'Edit', edit_link_path(@link) %> |
+<%= link_to 'Back', links_path %>

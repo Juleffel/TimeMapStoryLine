@@ -4,20 +4,32 @@
   </li>
   <% if user_signed_in? %>
     <li>
-    <%= link_to('Me déconnecter', destroy_user_session_path, :method=>'delete') %>
+    <%= link_to(t('sign_out'), destroy_user_session_path, :method=>'delete') %>
     </li>
   <% else %>
     <li>
-    <%= link_to('Me connecter', new_user_session_path)  %>
+    <%= link_to(t('sign_in'), new_user_session_path)  %>
     </li>
   <% end %>
   <% if user_signed_in? %>
     <li>
-    <%= link_to('Mon profil', edit_user_registration_path) %>
+    <%= link_to(t('edit_user'), edit_user_registration_path) %>
     </li>
   <% else %>
     <li>
-    <%= link_to('M\'inscrire', new_user_registration_path)  %>
+    <%= link_to(t('sign_up'), new_user_registration_path)  %>
     </li>
   <% end %>
+  <li>
+    <%= link_to(t('characters'), characters_path) %>
+  </li>
+  <li>
+    <%= link_to(t('nodes'), nodes_path) %>
+  </li>
+  <li>
+    <%= link_to(t('topics'), topics_path) %>
+  </li>
+  <li>
+    <%= link_to(t('links'), links_path) %>
+  </li>
 </ul>

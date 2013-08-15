@@ -1,0 +1,10 @@
+fr:
+  attributes:
+    username: "Pseudo"
+    email: "Email"
+    password: "Mot de passe"
+  activerecord:
+    attributes:
+      user:
+        password_confirmation: "Confirmation du mot de passe"
+          

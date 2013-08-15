@@ -11,7 +11,71 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130815113759) do
+ActiveRecord::Schema.define(version: 20130815164028) do
+
+  create_table "characters", force: true do |t|
+    t.integer  "user_id"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.date     "birth_date"
+    t.string   "birth_place"
+    t.boolean  "sex"
+    t.string   "avatar_url"
+    t.string   "avatar_name"
+    t.string   "copyright"
+    t.integer  "topic_id"
+    t.text     "story"
+    t.text     "resume"
+    t.text     "small_rp"
+    t.text     "anecdote"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "characters", ["topic_id"], name: "index_characters_on_topic_id"
+  add_index "characters", ["user_id"], name: "index_characters_on_user_id"
+
+  create_table "links", force: true do |t|
+    t.integer  "from_character_id"
+    t.integer  "to_character_id"
+    t.string   "title"
+    t.text     "description"
+    t.integer  "force"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "links", ["from_character_id"], name: "index_links_on_from_character_id"
+  add_index "links", ["to_character_id"], name: "index_links_on_to_character_id"
+
+  create_table "nodes", force: true do |t|
+    t.float    "longitude"
+    t.float    "latitude"
+    t.text     "title"
+    t.text     "resume"
+    t.datetime "begin_at"
+    t.datetime "end_at"
+    t.integer  "topic_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "nodes", ["topic_id"], name: "index_nodes_on_topic_id"
+
+  create_table "presences", force: true do |t|
+    t.integer  "node_id"
+    t.integer  "character_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "presences", ["character_id"], name: "index_presences_on_character_id"
+  add_index "presences", ["node_id"], name: "index_presences_on_node_id"
+
+  create_table "topics", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

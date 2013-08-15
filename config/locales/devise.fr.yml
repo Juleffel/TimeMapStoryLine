@@ -1,6 +1,10 @@
 # Additional translations at https://github.com/plataformatec/devise/wiki/I18n
 
 fr:
+  sign_in: "Me connecter"
+  sign_up: "M'inscrire"
+  sign_out: "Me déconnecter"
+  edit_user: "Mon profil"
   devise:
     confirmations:
       confirmed: 'Votre compte a été validé, vous êtes maintenant connecté'

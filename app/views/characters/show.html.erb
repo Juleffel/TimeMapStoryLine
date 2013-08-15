@@ -1,0 +1,74 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @character.user %>
+</p>
+
+<p>
+  <strong>First name:</strong>
+  <%= @character.first_name %>
+</p>
+
+<p>
+  <strong>Last name:</strong>
+  <%= @character.last_name %>
+</p>
+
+<p>
+  <strong>Birth date:</strong>
+  <%= @character.birth_date %>
+</p>
+
+<p>
+  <strong>Birth place:</strong>
+  <%= @character.birth_place %>
+</p>
+
+<p>
+  <strong>Sex:</strong>
+  <%= @character.sex %>
+</p>
+
+<p>
+  <strong>Avatar url:</strong>
+  <%= @character.avatar_url %>
+</p>
+
+<p>
+  <strong>Avatar name:</strong>
+  <%= @character.avatar_name %>
+</p>
+
+<p>
+  <strong>Copyright:</strong>
+  <%= @character.copyright %>
+</p>
+
+<p>
+  <strong>Topic:</strong>
+  <%= @character.topic %>
+</p>
+
+<p>
+  <strong>Story:</strong>
+  <%= @character.story %>
+</p>
+
+<p>
+  <strong>Resume:</strong>
+  <%= @character.resume %>
+</p>
+
+<p>
+  <strong>Small rp:</strong>
+  <%= @character.small_rp %>
+</p>
+
+<p>
+  <strong>Anecdote:</strong>
+  <%= @character.anecdote %>
+</p>
+
+<%= link_to 'Edit', edit_character_path(@character) %> |
+<%= link_to 'Back', characters_path %>

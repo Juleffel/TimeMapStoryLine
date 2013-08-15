@@ -1,0 +1,7 @@
+<%= content_tag :div, "", id: "cerebro",
+data: {
+  characters: @characters.map(&:json_attributes),
+  characters_by_id: @characters_by_id,
+  links: @links.map(&:json_attributes),
+  links_by_id: @links_by_id,
+} %>
