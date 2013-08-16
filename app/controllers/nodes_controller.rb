@@ -12,7 +12,13 @@ class NodesController < ApplicationController
     #@nodes_by_begin_at = Node.hash_by(:begin_at)
     respond_to do |format|
       format.html
-      format.json {respond_with(:characters => @characters.map(&:json_attributes), :nodes_by_id => @nodes_by_id)}
+      format.json do
+        render :json => {
+          :characters => @characters.map(&:json_attributes),
+          :characters_updated_at => @characters.maximum(:updated_at),
+          :nodes_by_id => @nodes_by_id
+        }
+      end
     end
   end
 

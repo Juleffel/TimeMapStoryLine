@@ -4,6 +4,7 @@
       #nodes_by_begin_at: @nodes_by_begin_at,
       nodes_by_id: @nodes_by_id,
       characters: @characters.map(&:json_attributes),
+      characters_updated_at: @characters.maximum(:updated_at),
       characters_by_id: @characters_by_id,
       cloudmade_api_key: ENV["CLOUDMADE_API_KEY"] || "9afc3ab7f647400f9e1c7fa91187fdcb",
     } %>

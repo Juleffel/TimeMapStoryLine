@@ -10,12 +10,18 @@ class Character < ActiveRecord::Base
   has_many :presences, inverse_of: :character
   has_many :nodes, through: :presences
   
+  default_scope -> {order(:id)}
+  
   def to_s
     (first_name || '') + ' ' + (last_name || '')
   end
   
+  def nodes_updated_at
+    nodes.maximum(:updated_at)
+  end
+  
   def json_attributes
-    attributes.merge({node_ids: node_ids, to_link_ids: to_link_ids, name: to_s})
+    attributes.merge({node_ids: nodes.order(:begin_at).map(&:id), nodes_updated_at: nodes_updated_at, to_link_ids: to_link_ids, name: to_s})
   end
   
   def self.hash_by(key)
