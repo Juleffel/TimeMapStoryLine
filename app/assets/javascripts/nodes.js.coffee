@@ -63,7 +63,7 @@ $ ->
               resume: @resume
               character_ids: @character_ids
           success: ->
-            alert "updated on server !"
+            console.log "#{@id} updated on server."
           error: ->
             alert "error on server !"
           dataType: "json"
