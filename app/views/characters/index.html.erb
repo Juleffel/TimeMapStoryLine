@@ -13,10 +13,6 @@
       <th>Avatar name</th>
       <th>Copyright</th>
       <th>Topic</th>
-      <th>Story</th>
-      <th>Resume</th>
-      <th>Small rp</th>
-      <th>Anecdote</th>
       <th></th>
       <th></th>
       <th></th>
@@ -36,10 +32,6 @@
         <td><%= character.avatar_name %></td>
         <td><%= character.copyright %></td>
         <td><%= character.topic %></td>
-        <td><%= character.story %></td>
-        <td><%= character.resume %></td>
-        <td><%= character.small_rp %></td>
-        <td><%= character.anecdote %></td>
         <td><%= link_to 'Show', character %></td>
         <td><%= link_to 'Edit', edit_character_path(character) %></td>
         <td><%= link_to 'Destroy', character, method: :delete, data: { confirm: 'Are you sure?' } %></td>
