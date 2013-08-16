@@ -32,8 +32,8 @@ ActiveRecord::Schema.define(version: 20130815164028) do
     t.datetime "updated_at"
   end
 
-  add_index "characters", ["topic_id"], name: "index_characters_on_topic_id"
-  add_index "characters", ["user_id"], name: "index_characters_on_user_id"
+  add_index "characters", ["topic_id"], name: "index_characters_on_topic_id", using: :btree
+  add_index "characters", ["user_id"], name: "index_characters_on_user_id", using: :btree
 
   create_table "links", force: true do |t|
     t.integer  "from_character_id"
@@ -45,8 +45,8 @@ ActiveRecord::Schema.define(version: 20130815164028) do
     t.datetime "updated_at"
   end
 
-  add_index "links", ["from_character_id"], name: "index_links_on_from_character_id"
-  add_index "links", ["to_character_id"], name: "index_links_on_to_character_id"
+  add_index "links", ["from_character_id"], name: "index_links_on_from_character_id", using: :btree
+  add_index "links", ["to_character_id"], name: "index_links_on_to_character_id", using: :btree
 
   create_table "nodes", force: true do |t|
     t.float    "longitude"
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 20130815164028) do
     t.datetime "updated_at"
   end
 
-  add_index "nodes", ["topic_id"], name: "index_nodes_on_topic_id"
+  add_index "nodes", ["topic_id"], name: "index_nodes_on_topic_id", using: :btree
 
   create_table "presences", force: true do |t|
     t.integer  "node_id"
@@ -69,8 +69,8 @@ ActiveRecord::Schema.define(version: 20130815164028) do
     t.datetime "updated_at"
   end
 
-  add_index "presences", ["character_id"], name: "index_presences_on_character_id"
-  add_index "presences", ["node_id"], name: "index_presences_on_node_id"
+  add_index "presences", ["character_id"], name: "index_presences_on_character_id", using: :btree
+  add_index "presences", ["node_id"], name: "index_presences_on_node_id", using: :btree
 
   create_table "topics", force: true do |t|
     t.datetime "created_at"
@@ -92,7 +92,7 @@ ActiveRecord::Schema.define(version: 20130815164028) do
     t.datetime "updated_at"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
 end
