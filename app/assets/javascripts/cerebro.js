@@ -131,8 +131,8 @@ function init() {
     minEdgeSize: 1,
     maxEdgeSize: 1
   }).mouseProperties({
-    maxRatio: 1,
-    mouseEnabled: false
+    maxRatio: 4,
+    //mouseEnabled: false
   });
  
   // (requires "sigma.parseGexf.js" to be executed)
@@ -146,12 +146,13 @@ function init() {
     console.log("Add character", character, character.id, character.name);
     sigInst.addNode('c'+character.id, {
       label: character.name,
-      x: Math.random(),
-      y: Math.random(),
-      size: 0.5+4.5*Math.random(),
-      color: 'rgb('+Math.round(Math.random()*256)+','+
-                    Math.round(Math.random()*256)+','+
-                    Math.round(Math.random()*256)+')'
+      //x: Math.random(),
+      //y: Math.random(),
+      //size: 0.5+4.5*Math.random(),
+      color: 'rgb(119,221,119)'
+      //color: 'rgb('+Math.round(Math.random()*256)+','+
+      //              Math.round(Math.random()*256)+','+
+      //              Math.round(Math.random()*256)+')'
     });
   }
   
@@ -164,9 +165,65 @@ function init() {
       'c'+link.to_character_id
     );
   }
+  
+  // Layout
+  sigma.publicPrototype.myLayout = function() { 
+    this.iterNodes(function(n){
+      n.x = Math.random();
+      n.y = Math.random();
+    });
+ 
+    return this.position(0,0,1).draw();
+  };
+  
+  // Grey color for not selected nodes
+  var greyColor = '#666';
+  sigInst.bind('overnodes',function(event){
+    var nodes = event.content;
+    var neighbors = {};
+    sigInst.iterEdges(function(e){
+      if(nodes.indexOf(e.source)<0 && nodes.indexOf(e.target)<0){
+        if(!e.attr['grey']){
+          e.attr['true_color'] = e.color;
+          e.color = greyColor;
+          e.attr['grey'] = 1;
+        }
+      }else{
+        e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
+        e.attr['grey'] = 0;
+ 
+        neighbors[e.source] = 1;
+        neighbors[e.target] = 1;
+      }
+    }).iterNodes(function(n){
+      if(!neighbors[n.id]){
+        if(!n.attr['grey']){
+          n.attr['true_color'] = n.color;
+          n.color = greyColor;
+          n.attr['grey'] = 1;
+        }
+      }else{
+        n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
+        n.attr['grey'] = 0;
+      }
+    }).draw(2,2,2);
+  }).bind('outnodes',function(){
+    sigInst.iterEdges(function(e){
+      e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
+      e.attr['grey'] = 0;
+    }).iterNodes(function(n){
+      n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
+      n.attr['grey'] = 0;
+    }).draw(2,2,2);
+  });
  
   // Finally, let's activate the FishEye on our instance:
+  sigInst.myLayout();
   sigInst.activateFishEye().draw();
+  
+  //document.onmousewheel = function(event){
+  //	sigInst.desactivateFishEye()
+  //}
 }
  
 if (document.addEventListener) {
