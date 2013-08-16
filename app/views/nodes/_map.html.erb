@@ -1,7 +1,7 @@
 <%= content_tag :div, "", id: "map", 
   data: {
       nodes: @nodes.map(&:json_attributes),
-      nodes_by_begin_at: @nodes_by_begin_at,
+      #nodes_by_begin_at: @nodes_by_begin_at,
       nodes_by_id: @nodes_by_id,
       characters: @characters.map(&:json_attributes),
       characters_by_id: @characters_by_id,

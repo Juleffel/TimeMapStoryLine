@@ -19,22 +19,56 @@ $ ->
     
     nodes = $map.data("nodes")
     nodes_by_id = $map.data("nodes-by-id")
-    nodes_by_begin_at = $map.data("nodes-by-begin-at")
+    #nodes_by_begin_at = $map.data("nodes-by-begin-at")
     characters = $map.data("characters")
     characters_by_id = $map.data("characters-by-id")
-    for node in nodes
-      lat = node.latitude
-      lon = node.longitude
-      title = node.title
-      resume = node.resume
-      topic_id = node.topic_id
-      node_characters = []
-      for ch_id in node.character_ids
-        node_characters.push(characters_by_id[ch_id])
-      with_ch = ""
-      for ch in node_characters
-        with_ch += ch.name + ' '
+
+    class Node
+      constructor: (@id, @lat, @lng, @title, @resume, @topic_id, @character_ids) ->
+        @update_characters()
+        @marker = L.marker([lat, lng], {"draggable": true, "title": @character_names, "riseOnOver": true})
+        @marker.addTo(map)
+        $(@marker).bind('dragend', (e) =>
+          latlng = @marker.getLatLng()
+          @lat = latlng.lat
+          @lng = latlng.lng
+          @update_on_server()
+        )
+        @update_popup()
+      
+      update_latlng: ->
+        @marker.setLatLng([@lat, @lng])
+        @marker.update()
+      update_popup: ->
+        @marker.bindPopup "<h5>#{@title}</h5>#{@resume}<br><small>#{@character_names}</small>"
         
-      marker = L.marker([lat, lon]).addTo(map)
-      marker.bindPopup("<h5>#{title}</h5>#{resume}<br><small>#{with_ch}</small>")
+      update_characters: ->
+        @characters = []
+        for ch_id in @character_ids
+          @characters.push(characters_by_id[ch_id])
+        @character_names = ""
+        for character in @characters
+          @character_names += character.name + ' '
+      
+      update_on_server: ->
+        $.ajax
+          type: "PUT"
+          url: "/nodes/"+@id
+          data: 
+            node:
+              id: @id
+              latitude: @lat
+              longitude: @lng
+              title: @title
+              resume: @resume
+              character_ids: @character_ids
+          success: ->
+            alert "updated on server !"
+          error: ->
+            alert "error on server !"
+          dataType: "json"
+        
+    
+    for node in nodes
+      node_obj = new Node(node.id, node.latitude, node.longitude, node.title, node.resume, node.topic_id, node.character_ids)
     

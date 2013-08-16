@@ -4,11 +4,16 @@ class NodesController < ApplicationController
   # GET /nodes
   # GET /nodes.json
   def index
-    @nodes = Node.all.includes(:characters)
-    @nodes_by_begin_at = Node.hash_by(:begin_at)
+    @characters = Character.all.includes(:nodes)
     @nodes_by_id = Node.hash_by(:id)
-    @characters = Character.all
+    @nodes = Node.all.includes(:characters)
+    
     @characters_by_id = Character.hash_by(:id)
+    #@nodes_by_begin_at = Node.hash_by(:begin_at)
+    respond_to do |format|
+      format.html
+      format.json {respond_with(:characters => @characters.map(&:json_attributes), :nodes_by_id => @nodes_by_id)}
+    end
   end
 
   # GET /nodes/1
