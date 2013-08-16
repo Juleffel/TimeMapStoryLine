@@ -28,7 +28,6 @@ $ ->
       constructor: ->
         @characters = characters
         @construct_list()
-        @nodes_by_id = nodes_by_id
         @updated_at = characters_updated_at
         setInterval( =>
           @update_from_server()
@@ -45,8 +44,9 @@ $ ->
           url: "/nodes"
           dataType: "json"
           success: (data) =>
-            @update(data.characters, data.nodes_by_id, data.characters_updated_at)
-      update: (characters, nodes_by_id, characters_updated_at)->
+            nodes_by_id = data.nodes_by_id
+            @update(data.characters, data.characters_updated_at)
+      update: (characters, characters_updated_at)->
         console.log('updated : ', @characters, characters)
         @characters = characters
         if characters_updated_at != @updated_at
@@ -83,7 +83,7 @@ $ ->
         @update_nodes()
         @destroy_node_obj()
         @create_node_obj()
-        alert("character #{ch.id} updated")
+        console.log("character #{ch.id} updated")
       update_nodes: ->
         @nodes = []
         for node_id in @character.node_ids
