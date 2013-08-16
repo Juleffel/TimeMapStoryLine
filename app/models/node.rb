@@ -3,6 +3,8 @@ class Node < ActiveRecord::Base
   has_many :presences, inverse_of: :node
   has_many :characters, through: :presences
   
+  default_scope -> {order(:begin_at)}
+  
   def json_attributes
     attributes.merge({character_ids: character_ids})
   end
