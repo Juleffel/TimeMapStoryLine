@@ -4,9 +4,12 @@ class Node < ActiveRecord::Base
   has_many :characters, through: :presences
   
   default_scope -> {order(:begin_at)}
+  def end_at
+    @end_at || (begin_at + 3.hours if begin_at)
+  end
   
   def json_attributes
-    attributes.merge({character_ids: character_ids})
+    attributes.merge({character_ids: character_ids, end_at: end_at})
   end
   
   def self.hash_by(key)

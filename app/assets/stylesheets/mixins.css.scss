@@ -1,0 +1,74 @@
+/* Commonly used mixins for CSS3 in SASS
+   by Ben Sargent (2012)
+   www.brokendigits.com
+*/
+ 
+ 
+/* generically prefix any property name */
+@mixin prefix($name, $value) {
+  -webkit-#{$name}: $value;
+  -moz-#{$name}: $value;
+  -ms-#{$name}: $value;
+  -o-#{$name}: $value;
+  #{$name}: $value;
+}
+/* for border-radius, named to be consistent with roundedcorner */
+@mixin rounded($radius: 6px) {
+  border-radius: $radius;
+}
+/* used for rounding a single corner. eg. roundedcorner(top, left) */
+@mixin roundedcorner($surface, $side, $radius: 6px) {
+  border-#{$surface}-#{$side}-radius: $radius;
+}
+@mixin boxshadow($horiz, $vert, $blur, $color) {
+  box-shadow: $horiz $vert $blur $color;
+}
+@mixin innershadow($horiz, $vert, $blur, $color) {
+  box-shadow: inset $horiz $vert $blur $color;
+}
+@mixin opacity($level) {
+  filter: alpha(opacity = $level * 100);
+  opacity: $level;
+}
+@mixin borderimage($image, $top, $right, $bottom, $left, $repeat: stretch) {
+  border-width: #{$top}px #{$right}px #{$bottom}px #{$left}px;
+  -webkit-border-image: url($image) $top $right $bottom $left $repeat;
+  -moz-border-image: url($image) $top $right $bottom $left $repeat;
+  -ms-border-image: url($image) $top $right $bottom $left $repeat;
+  -o-border-image: url($image) $top $right $bottom $left $repeat;
+  /*  border-image: url($image) $top $right $bottom $left $repeat; removed since Chrome's implementation is fundamentally broken */
+}
+ 
+/* useful for semi-transparent borders which can have bleed-through. See https://developer.mozilla.org/en/CSS/background-clip */
+@mixin backgroundclip($val: padding-box) {
+  -webkit-background-clip: $val;
+  -moz-background-clip: $val;
+}
+@mixin transition($property: all, $duration: 0.2s, $timing: linear) {
+  -webkit-transition: #{$property} $duration $timing;
+  -moz-transition: #{$property} $duration $timing;
+  -ie-transition: #{$property} $duration $timing;
+  -o-transition: #{$property} $duration $timing;
+  transition: $property $duration $timing;
+}
+/* if you need to transition a prefixed property, use this instead */
+@mixin transition-with-prefix($property, $duration: 0.2s, $timing: linear) {
+  -webkit-transition: -webkit-#{$property} $duration $timing;
+  -moz-transition: -moz-#{$property} $duration $timing;
+  -ie-transition: -moz-#{$property} $duration $timing;
+  -o-transition: -o-#{$property} $duration $timing;
+  transition: $property $duration $timing;
+}
+@mixin transform($type) {
+  -webkit-transform: $type;
+  -moz-transform: $type;
+  -ms-transform: $type;
+  -o-transform: $type;
+  transform: $type;
+}
+@mixin animation($name, $timing: 0.5s) {
+  -webkit-animation: $name $timing;
+  -moz-animation: $name $timing;
+  -ms-animation: $name $timing;
+  -o-animation: $name $timing;
+}

@@ -8,3 +8,9 @@
       characters_by_id: @characters_by_id,
       cloudmade_api_key: ENV["CLOUDMADE_API_KEY"] || "9afc3ab7f647400f9e1c7fa91187fdcb",
     } %>
+<%= content_tag :div, "", id: "date-slider",
+data: {from: "11/12/2013".to_date, to: "16/12/2013".to_date} %>
+<%= content_tag :div do %>
+  Carte au : 
+  <%= content_tag :span, "", id: "date-value" %>
+<% end %>
