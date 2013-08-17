@@ -3,16 +3,8 @@ function init() {
   var cerebro = document.getElementById('cerebro');
   if (cerebro == null) return;
   
-  /**
-   * This is the code to write the FishEye plugin :
-   */
-  
+/*** FISH EYE ***/
   (function(){
- 
-    // First, let's write a FishEye class.
-    // There is no need to make this class global, since it is made to be used through
-    // the SigmaPublic object, that's why a local scope is used for the declaration.
-    // The parameter 'sig' represents a Sigma instance.
     var FishEye = function(sig) { 
       sigma.classes.Cascade.call(this);      // The Cascade class manages the chainable property
                                              // edit/get function.
@@ -96,7 +88,7 @@ function init() {
       return this;
     };
  
-    sigma.publicPrototype.desactivateFishEye = function() {
+    sigma.publicPrototype.deactivateFishEye = function() {
       if(this.fisheye && this.fisheye.activated()){
         this.fisheye.activated(false);
         this._core.unbind('graphscaled', this.fisheye.handler);
@@ -113,10 +105,9 @@ function init() {
       return res == s ? this.fisheye : res;
     };
   })();
- 
-  /**
-   * Now, let's use our plugin :
-   */
+/*** END : FISH EYE ***/
+
+/*** CEREBRO INSTANTIATION ***/
   var $cerebro = $(cerebro);
   var sigInst = sigma.init(cerebro).drawingProperties({
     defaultLabelColor: '#fff',
@@ -131,31 +122,31 @@ function init() {
     minEdgeSize: 1,
     maxEdgeSize: 1
   }).mouseProperties({
-    maxRatio: 4,
-    //mouseEnabled: false
+    maxRatio: 4, // Max zoom
+    minRatio: 1 // Max dezoom
   });
- 
-  // (requires "sigma.parseGexf.js" to be executed)
+/*** END : CEREBRO INSTANTIATION ***/
+
+/*** NODE AND EDGE INSTANTIATION ***/
   var characters = $cerebro.data('characters');
   var characters_by_id = $cerebro.data('characters_by_id');
   var links = $cerebro.data('links');
   var links_by_id = $cerebro.data('links_by_id');
   
+  /* NODES */
   for (var ch_ind in characters) {
     character = characters[ch_ind];
     console.log("Add character", character, character.id, character.name);
-    sigInst.addNode('c'+character.id, {
-      label: character.name,
-      //x: Math.random(),
-      //y: Math.random(),
-      //size: 0.5+4.5*Math.random(),
-      color: 'rgb(119,221,119)'
-      //color: 'rgb('+Math.round(Math.random()*256)+','+
-      //              Math.round(Math.random()*256)+','+
-      //              Math.round(Math.random()*256)+')'
-    });
+    
+    var node = {label: character.name, attributes:[], color: 'rgb(119,221,119)'}; // Create basic node
+    /* Add attributes to node */
+    node.attributes.push({attr:'name', val:'plop'});
+    node.attributes.push({attr:'age', val:'17'});
+    
+	sigInst.addNode('c'+character.id,node); // Add node to cerebro
   }
   
+  /* EDGES */
   for (var li_ind in links) {
     link = links[li_ind];
     console.log("Add link", link, link.id, link.from_character_id, link.to_character_id);
@@ -165,18 +156,20 @@ function init() {
       'c'+link.to_character_id
     );
   }
+/*** END : NODE AND EDGE INSTANTIATION ***/
   
-  // Layout
+/*** LAYOUT ALGORITHM ***/
   sigma.publicPrototype.myLayout = function() { 
     this.iterNodes(function(n){
-      n.x = Math.random();
+      n.x = Math.random(); // Random for now...
       n.y = Math.random();
     });
  
     return this.position(0,0,1).draw();
   };
+/*** END : LAYOUT ALGORITHM ***/
   
-  // Grey color for not selected nodes
+/*** GREY COLOR FOR NOT SELECTED NODES ***/
   var greyColor = '#666';
   sigInst.bind('overnodes',function(event){
     var nodes = event.content;
@@ -216,14 +209,85 @@ function init() {
       n.attr['grey'] = 0;
     }).draw(2,2,2);
   });
+/*** END : GREY COLOR FOR NOT SELECTED NODES ***/
+
+/*** LEGEND TO NODE ***/
+  (function(){
+    var popUp;
  
-  // Finally, let's activate the FishEye on our instance:
+    // Create a list with every node attribute
+    function attributesToString(attr) {
+      return '<ul>' +
+        attr.map(function(o){
+          return '<li>' + o.attr + ' : ' + o.val + '</li>';
+        }).join('') +
+        '</ul>';
+    }
+ 
+    function showNodeInfo(event) {
+      popUp && popUp.remove();
+ 
+      var node;
+      sigInst.iterNodes(function(n){
+        node = n;
+      },[event.content[0]]);
+      //alert(attributesToString( node['attr']['attributes'] ))
+      //var ratio = sigInst.position().ratio;
+      //alert(ratio)
+      popUp = $(
+        '<div class="node-info-popup"></div>'
+      ).append(
+        // The GEXF parser stores all the attributes in an array named
+        // 'attributes'. And since sigma.js does not recognize the key
+        // 'attributes' (unlike the keys 'label', 'color', 'size' etc),
+        // it stores it in the node 'attr' object :
+        attributesToString( node['attr']['attributes'] )
+      ).attr(
+        'id',
+        'node-info'+sigInst.getID()
+      ).css({
+        'display': 'inline-block',
+        'border-radius': 3,
+        'padding': 5,
+        'background': '#fff',
+        'color': '#000',
+        'box-shadow': '0 0 4px #666',
+        'position': 'absolute',
+        'left': node.displayX,
+        'top': node.displayY+15
+      });
+ 
+      $('ul',popUp).css('margin','0 0 0 20px');
+ 
+      $cerebro.append(popUp);
+    }
+ 
+    function hideNodeInfo(event) {
+      popUp && popUp.remove();
+      popUp = false;
+    }
+ 	
+    sigInst.bind('overnodes',showNodeInfo).bind('outnodes',hideNodeInfo).draw();
+  })();
+/*** END : LEGEND TO NODE ***/
+
+/*** REMOVE FISH EYE ON ZOOM ***/
+  document.onmousewheel = function(event){ // On mouse wheel...
+  	var ratio = sigInst.position().ratio; // Retrieve current ratio
+  	if (ratio == 1 ) {
+  		sigInst.activateFishEye() // Activate the fish eye only on max dezoom
+  	}
+  	else {
+	  	sigInst.deactivateFishEye()
+	}
+  }
+/*** END :REMOVE FISH EYE ON ZOOM ***/
+
+/*** ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
   sigInst.myLayout();
   sigInst.activateFishEye().draw();
-  
-  //document.onmousewheel = function(event){
-  //	sigInst.desactivateFishEye()
-  //}
+/*** END : ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
+
 }
  
 if (document.addEventListener) {
