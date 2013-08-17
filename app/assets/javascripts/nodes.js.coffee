@@ -83,21 +83,22 @@ $ ->
             @construct_list()
       # Updates the date for all the characters of the map
       update_date: (new_date)->
-        @last_date = new_date
-        if !@date_blocked
-          # One modif max for 500 ms
-          @date_blocked = true
-          setTimeout( =>
-            @date_blocked = false
-            # Ensure that the last date set is the one on the slider
+        if new_date != @last_date
+          @last_date = new_date
+          if !@date_blocked
+            # One modif max for 500 ms
+            @date_blocked = true
             setTimeout( =>
-              if !@date_blocked && @last_date != new_date
-                @update_date(@last_date)
-            100)
-          500)
-          console.log(new_date)
-          for c in @list
-            c.update_date(new_date)
+              @date_blocked = false
+              # Ensure that the last date set is the one on the slider
+              setTimeout( =>
+                if !@date_blocked && @last_date != new_date
+                  @update_date(@last_date)
+              10)
+            15)
+            console.log(new_date)
+            for c in @list
+              c.update_date(new_date)
     
     # A character is the character and its nodes
     # @character: Character model from server
@@ -118,6 +119,7 @@ $ ->
         @node = $.extend({}, @nodes[@next_node_index])
         @node_obj.update_node_content(@node)
         @update_node_obj_position()
+        @last_node_index = @next_node_index
       # Update position of @node and @node_obj
       # @node_obj must exists
       update_node_obj_position: ->
@@ -138,14 +140,16 @@ $ ->
           diff_dates = jv_date(suiv_node.begin_at) - jv_date(cur_node.end_at)
           diff_dates_current = jv_date(@date) - jv_date(cur_node.end_at)
           if diff_dates == 0
+            # Nodes times are touching each other
+            # Whoops ! Warning: Div by 0 !
             new_lat = cur_lat
             new_lng = cur_lng
           else
             new_lat = cur_lat + diff_lat * (diff_dates_current/diff_dates)
             new_lng = cur_lng + diff_lng * (diff_dates_current/diff_dates)
-          console.log("char:", @character.name)
-          console.log('latlng:', cur_lat, cur_lng, new_lat, new_lng)
-          console.log('diffs:', diff_lat, diff_lng, diff_dates, diff_dates_current)
+          #console.log("char:", @character.name)
+          #console.log('latlng:', cur_lat, cur_lng, new_lat, new_lng)
+          #console.log('diffs:', diff_lat, diff_lng, diff_dates, diff_dates_current)
         @node.latitude = new_lat
         @node.longitude = new_lng
         @node_obj.update_node_position(@node)
@@ -257,7 +261,7 @@ $ ->
             @node.longitude = latlng.lng
             @update_on_server()
         )
-        @update_popup()
+        @create_popup()
       
       # Updates only node position according to the content of node
       # Beware to not change other fields of node, except real.
@@ -267,22 +271,27 @@ $ ->
       # Updates the position of the marker on the map
       update_latlng: ->
         @marker.setLatLng([@node.latitude, @node.longitude])
-        @marker.update()
+        #@marker.update()
         
       # Update whole content of node (popup, position..) according to the content of node
       update_node_content: (node) ->
         console.log("Update node content", @node.title, "->", node.title)
         @node = node
         @update_popup()
+      popup_content: ->
+        "<h5>#{@node.title}</h5>#{@node.resume}<br><small>#{@character_names}</small>"
+        
       # Destroy the popup
       destroy_popup: ->
         console.log("destroy a popup")
         @marker.closePopup()
         @marker.unbindPopup()
-      update_popup: ->
+      create_popup: ->
         console.log("create a popup", @node.title)
-        @destroy_popup()
-        @marker.bindPopup "<h5>#{@node.title}</h5>#{@node.resume}<br><small>#{@character_names}</small>"
+        @marker.bindPopup @popup_content()
+      update_popup: ->
+        console.log("update a popup", @node.title)
+        @marker.setPopupContent @popup_content()
         
       # Destroy popup and marker
       destroy: ->
