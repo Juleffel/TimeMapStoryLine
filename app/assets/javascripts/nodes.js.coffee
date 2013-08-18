@@ -12,6 +12,7 @@ $ ->
     map = L.map('map').setView([48.856, 2.35], 13)
   
     cloudmade_api_key = $map.data("cloudmade-api-key")
+    L.Icon.Default.imageUrl = 'http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif'
     L.tileLayer("http://{s}.tile.cloudmade.com/#{cloudmade_api_key}/997/256/{z}/{x}/{y}.png", {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
         maxZoom: 18
