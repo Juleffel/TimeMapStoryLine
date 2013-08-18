@@ -109,6 +109,7 @@ function init() {
 
 /*** CEREBRO INSTANTIATION ***/
   var $cerebro = $(cerebro);
+  var minRatio = 1;
   var sigInst = sigma.init(cerebro).drawingProperties({
     defaultLabelColor: '#fff',
     defaultLabelSize: 14,
@@ -123,7 +124,7 @@ function init() {
     maxEdgeSize: 1
   }).mouseProperties({
     maxRatio: 4, // Max zoom
-    minRatio: 1 // Max dezoom
+    minRatio: minRatio // Max dezoom
   });
 /*** END : CEREBRO INSTANTIATION ***/
 
@@ -231,9 +232,7 @@ function init() {
       sigInst.iterNodes(function(n){
         node = n;
       },[event.content[0]]);
-      //alert(attributesToString( node['attr']['attributes'] ))
-      //var ratio = sigInst.position().ratio;
-      //alert(ratio)
+   
       popUp = $(
         '<div class="node-info-popup"></div>'
       ).append(
@@ -273,13 +272,17 @@ function init() {
 
 /*** REMOVE FISH EYE ON ZOOM ***/
   document.onmousewheel = function(event){ // On mouse wheel...
-  	var ratio = sigInst.position().ratio; // Retrieve current ratio
-  	if (ratio == 1 ) {
-  		sigInst.activateFishEye() // Activate the fish eye only on max dezoom
-  	}
-  	else {
-	  	sigInst.deactivateFishEye()
-	}
+  	clearTimeout($.data(this, 'scrollTimer'));
+    $.data(this, 'scrollTimer', setTimeout(function() {
+        console.log("Haven't scrolled in 250ms!");
+        var ratio = sigInst.position().ratio; // Retrieve current ratio
+	  	if (Math.abs(ratio-minRatio) <= 0.1 ) {
+	  		sigInst.activateFishEye() // Activate the fish eye only on max dezoom
+	  	}
+	  	else {
+		  	sigInst.deactivateFishEye()
+		}
+    }, 250));
   }
 /*** END :REMOVE FISH EYE ON ZOOM ***/
 
