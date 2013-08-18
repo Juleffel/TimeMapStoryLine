@@ -126,6 +126,78 @@ Ainsi Virus VI est-il décrit par Haeg la première fois qu'il entre dans le RP.
 },
     topic: topics[2],
 })
+amo = Character.create!({
+    first_name: "Amosis", last_name: "Opilion", 
+    birth_date: "11/11/1987".to_date,
+    birth_place: "Égypte", 
+    sex: true, 
+    avatar_url: "",
+    avatar_name: "Brad Pitt",
+    copyright: "Pidupuis",
+    story:
+%{« Archéologue maudit depuis qu'il a profané une tombe.},
+    resume:
+%{Maudit, et archéologue.},
+    small_rp:
+%{Amo' se promenait.},
+    anecdote:
+%{Maudit.},
+    topic: topics[3],
+})
+jason = Character.create!({
+    first_name: "Jason", last_name: "Belham", 
+    birth_date: "11/11/1987".to_date,
+    birth_place: "Tyral", 
+    sex: true, 
+    avatar_url: "",
+    avatar_name: "Jason Statham",
+    copyright: "Pidupuis",
+    story:
+%{« Mec qui se transforme en fumée.},
+    resume:
+%{Se transforme en fumée.},
+    small_rp:
+%{Jason se promenait.},
+    anecdote:
+%{Fumée.},
+    topic: topics[4],
+})
+ursula = Character.create!({
+    first_name: "Ursula", last_name: "Cruela Mochtapv", 
+    birth_date: "11/11/1987".to_date,
+    birth_place: "Russie", 
+    sex: true, 
+    avatar_url: "",
+    avatar_name: "Fiona Shaw",
+    copyright: "Pidupuis",
+    story:
+%{« Madame moche qui se transforme en autruche.},
+    resume:
+%{Autruche moche.},
+    small_rp:
+%{Ursula se promenait.},
+    anecdote:
+%{Moche.},
+    topic: topics[5],
+})
+rusty = Character.create!({
+    first_name: "Rusty", last_name: "Livingstone", 
+    birth_date: "11/11/1987".to_date,
+    birth_place: "Tyral", 
+    sex: true, 
+    avatar_url: "",
+    avatar_name: "Dennis Haysbert",
+    copyright: "Pidupuis",
+    story:
+%{« Inquisiteur tout bronzé qui a mimé la création d'un exosquelette de verre par les diatomées.},
+    resume:
+%{Bronzé, et exodiate.},
+    small_rp:
+%{Rusty se promenait.},
+    anecdote:
+%{Bronzé.},
+    topic: topics[6],
+})
 
 # Links
 Link.create!([
@@ -137,6 +209,33 @@ Link.create!([
     force: -100},
   {from_character: haeg, to_character: febay, title: "Vieil ennemi", 
     description: %{C'est dans ses plus grands ennemis qu'on reconnait aussi ses plus grands amis},
+    force: -20},
+  {from_character: amo, to_character: febay, title: "Compliqué", 
+    description: %{Frères d'arme, amis/ennemis, beau-frères, etc},
+    force: -20},
+  {from_character: amo, to_character: haeg, title: "Compliqué (bis)", 
+    description: %{Frères d'arme, amis/ennemis, tuteur/disciple, golfeurs, etc},
+    force: -20},
+  {from_character: rusty, to_character: haeg, title: "Collègues", 
+    description: %{Inquisiteurs, rien de plus},
+    force: -20},
+  {from_character: febay, to_character: ursula, title: "Collègues", 
+    description: %{Ellipsis, rien de plus},
+    force: -20},
+  {from_character: haeg, to_character: jason, title: "Garde du corps", 
+    description: %{Comme s'il avait besoin de protection},
+    force: -20},
+  {from_character: amo, to_character: jason, title: "Ennemis", 
+    description: %{Faut bien taper sur du cerber},
+    force: -20},
+  {from_character: amo, to_character: ursula, title: "Compliqué (bis)", 
+    description: %{Faut bien taper sur de l'ellipsis},
+    force: -20},
+  {from_character: ursula, to_character: virus, title: "Couple", 
+    description: %{Sans commentaire},
+    force: -20},
+  {from_character: rusty, to_character: jason, title: "Collègues", 
+    description: %{Inqui/Cerber, comme d'hab},
     force: -20},
 ])
 
