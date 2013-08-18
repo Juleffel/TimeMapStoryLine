@@ -17,6 +17,17 @@ $ ->
         maxZoom: 18
     }).addTo(map)
     
+    redPointIcon = L.icon
+      iconUrl: 'http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif',
+      iconRetinaUrl: 'http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      popupAnchor: [10, 0],
+      #shadowUrl: 'my-icon-shadow.png',
+      #shadowRetinaUrl: 'my-icon-shadow@2x.png',
+      #shadowSize: [68, 95],
+      #shadowAnchor: [22, 94]
+    
     # Some content from $map data
     nodes = $map.data("nodes")
     nodes_by_id = $map.data("nodes-by-id")
@@ -254,6 +265,7 @@ $ ->
         @marker = L.marker([@node.latitude, @node.longitude], {"draggable": true, "title": @character_names})
         #@marker.addTo(map)
         map.addLayer(@marker)
+        @marker.setIcon(redPointIcon)
         @marker.on('dragend', (e) =>
           latlng = @marker.getLatLng()
           if @node.real
