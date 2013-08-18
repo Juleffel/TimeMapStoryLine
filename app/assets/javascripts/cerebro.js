@@ -236,10 +236,6 @@ function init() {
       popUp = $(
         '<div class="node-info-popup"></div>'
       ).append(
-        // The GEXF parser stores all the attributes in an array named
-        // 'attributes'. And since sigma.js does not recognize the key
-        // 'attributes' (unlike the keys 'label', 'color', 'size' etc),
-        // it stores it in the node 'attr' object :
         attributesToString( node['attr']['attributes'] )
       ).attr(
         'id',
@@ -284,6 +280,7 @@ function init() {
 		}
     }, 250));
   }
+  
 /*** END :REMOVE FISH EYE ON ZOOM ***/
 
 /*** ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
