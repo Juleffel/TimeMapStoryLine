@@ -9,7 +9,7 @@ $ ->
   $map = $("#map")
   
   if $map.length
-    map = L.map('map').setView([48.856, 2.35], 13)
+    map = L.map('map').setView([20, 50], 2)
   
     cloudmade_api_key = $map.data("cloudmade-api-key")
     L.Icon.Default.imageUrl = 'http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif'
@@ -23,7 +23,7 @@ $ ->
       iconRetinaUrl: 'http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif',
       iconSize: [20, 20],
       iconAnchor: [10, 10],
-      popupAnchor: [10, 0],
+      popupAnchor: [0, -10],
       #shadowUrl: 'my-icon-shadow.png',
       #shadowRetinaUrl: 'my-icon-shadow@2x.png',
       #shadowSize: [68, 95],
