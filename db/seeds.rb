@@ -259,6 +259,18 @@ nodes = Node.create!([
   {latitude: 0, longitude: 120, title: "Pendant ce temps, Virus fait des sushis.",
     resume: %{},
     begin_at: "15/12/2013".to_date},
+  {latitude: 49, longitude: 1, title: "Amo' powaa !",
+    resume: %{},
+    begin_at: "11/12/2013".to_date},
+  {latitude: 49, longitude: 2, title: "Jason powaa !",
+    resume: %{},
+    begin_at: "11/12/2013".to_date},
+  {latitude: 49, longitude: 3, title: "Ursula powaa !",
+    resume: %{},
+    begin_at: "11/12/2013".to_date},
+  {latitude: 49, longitude: 4, title: "Rusty powaa !",
+    resume: %{},
+    begin_at: "11/12/2013".to_date},
 ])
 
 Presence.create!([
@@ -269,4 +281,8 @@ Presence.create!([
   {node: nodes[3], character: febay},
   {node: nodes[4], character: febay},
   {node: nodes[5], character: virus},
+  {node: nodes[6], character: amo},
+  {node: nodes[7], character: jason},
+  {node: nodes[8], character: ursula},
+  {node: nodes[9], character: rusty},
 ])
