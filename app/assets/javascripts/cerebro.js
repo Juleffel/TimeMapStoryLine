@@ -270,7 +270,7 @@ function init() {
   document.onmousewheel = function(event){ // On mouse wheel...
   	clearTimeout($.data(this, 'scrollTimer'));
     $.data(this, 'scrollTimer', setTimeout(function() {
-        console.log("Haven't scrolled in 250ms!");
+        //console.log("Haven't scrolled in 250ms!");
         var ratio = sigInst.position().ratio; // Retrieve current ratio
 	  	if (Math.abs(ratio-minRatio) <= 0.1 ) {
 	  		sigInst.activateFishEye() // Activate the fish eye only on max dezoom
@@ -286,6 +286,10 @@ function init() {
 /*** ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
   sigInst.myLayout();
   sigInst.activateFishEye().draw();
+  
+  //sigInst.startForceAtlas2();
+  //setTimeout(function(){sigInst.stopForceAtlas2()},5000);
+  
 /*** END : ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
 
 }

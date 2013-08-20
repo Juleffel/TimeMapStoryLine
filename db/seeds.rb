@@ -135,7 +135,7 @@ amo = Character.create!({
     avatar_name: "Brad Pitt",
     copyright: "Pidupuis",
     story:
-%{« Archéologue maudit depuis qu'il a profané une tombe.},
+%{Archéologue maudit depuis qu'il a profané une tombe.},
     resume:
 %{Maudit, et archéologue.},
     small_rp:
@@ -153,7 +153,7 @@ jason = Character.create!({
     avatar_name: "Jason Statham",
     copyright: "Pidupuis",
     story:
-%{« Mec qui se transforme en fumée.},
+%{Mec qui se transforme en fumée.},
     resume:
 %{Se transforme en fumée.},
     small_rp:
@@ -171,7 +171,7 @@ ursula = Character.create!({
     avatar_name: "Fiona Shaw",
     copyright: "Pidupuis",
     story:
-%{« Madame moche qui se transforme en autruche.},
+%{Madame moche qui se transforme en autruche.},
     resume:
 %{Autruche moche.},
     small_rp:
@@ -189,7 +189,7 @@ rusty = Character.create!({
     avatar_name: "Dennis Haysbert",
     copyright: "Pidupuis",
     story:
-%{« Inquisiteur tout bronzé qui a mimé la création d'un exosquelette de verre par les diatomées.},
+%{Inquisiteur tout bronzé qui a mimé la création d'un exosquelette de verre par les diatomées.},
     resume:
 %{Bronzé, et exodiate.},
     small_rp:
@@ -197,6 +197,24 @@ rusty = Character.create!({
     anecdote:
 %{Bronzé.},
     topic: topics[6],
+})
+loby = Character.create!({
+    first_name: "Alexander", last_name: "Lobner", 
+    birth_date: "11/11/1987".to_date,
+    birth_place: "Partout", 
+    sex: true, 
+    avatar_url: "",
+    avatar_name: "...",
+    copyright: "Juleffel",
+    story:
+%{N.R.},
+    resume:
+%{N.R.},
+    small_rp:
+%{N.R.},
+    anecdote:
+%{N.R.},
+    topic: topics[7],
 })
 
 # Links
@@ -228,7 +246,7 @@ Link.create!([
   {from_character: amo, to_character: jason, title: "Ennemis", 
     description: %{Faut bien taper sur du cerber},
     force: -20},
-  {from_character: amo, to_character: ursula, title: "Compliqué (bis)", 
+  {from_character: amo, to_character: ursula, title: "Ennemis", 
     description: %{Faut bien taper sur de l'ellipsis},
     force: -20},
   {from_character: ursula, to_character: virus, title: "Couple", 
@@ -259,16 +277,16 @@ nodes = Node.create!([
   {latitude: 0, longitude: 120, title: "Pendant ce temps, Virus fait des sushis.",
     resume: %{},
     begin_at: "15/12/2013".to_date},
-  {latitude: 49, longitude: 1, title: "Amo' powaa !",
+  {latitude: 59, longitude: 31, title: "Amo' powaa !",
     resume: %{},
     begin_at: "11/12/2013".to_date},
-  {latitude: 49, longitude: 2, title: "Jason powaa !",
+  {latitude: 39, longitude: 1.5, title: "Jason powaa !",
     resume: %{},
     begin_at: "11/12/2013".to_date},
-  {latitude: 49, longitude: 3, title: "Ursula powaa !",
+  {latitude: 49, longitude: 130, title: "Ursula powaa !",
     resume: %{},
     begin_at: "11/12/2013".to_date},
-  {latitude: 49, longitude: 4, title: "Rusty powaa !",
+  {latitude: 45, longitude: -120, title: "Rusty powaa !",
     resume: %{},
     begin_at: "11/12/2013".to_date},
 ])
