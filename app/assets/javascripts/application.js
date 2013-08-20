@@ -16,5 +16,6 @@
 //= require jquery-ui-bootstrap
 //= require leaflet
 //= require sigma
+//= require sigma.forceatlas
 // require turbolinks
 //= require_tree .
