@@ -182,7 +182,7 @@ $ ->
       # Update @next_node_index with the index of the node just before the date,
       # or the first node if the date is before
       choose_node: ->
-        if @date
+        if @date && @nodes.length > 0
           node_index = 0
           # Functions
           search_forward = =>
