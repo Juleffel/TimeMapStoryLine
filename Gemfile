@@ -60,4 +60,4 @@ gem 'simple_form', :github => 'plataformatec/simple_form'
 gem "active_model_serializers"
 
 gem 'cloudmade'
-gem 'leaflet-rails'
+gem 'leaflet-rails', :github => 'Juleffel/leaflet-rails'
