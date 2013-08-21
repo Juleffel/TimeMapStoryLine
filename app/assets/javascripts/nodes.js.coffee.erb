@@ -289,8 +289,8 @@ $ ->
             @update_on_server()
           else
             delete @node.id
-            delete @node.title
-            delete @node.resume
+            @node.title = prompt("Titre")
+            @node.resume = prompt("Résumé")
             delete @node.topic_id
             @node.begin_at = character_list.last_date
             delete @node.end_at
