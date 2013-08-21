@@ -292,8 +292,10 @@ $ ->
             delete @node.title
             delete @node.resume
             delete @node.topic_id
+            @node.begin_at = character_list.last_date
+            delete @node.end_at
             @create_on_server()
-            @destroy()
+            #@destroy()
         )
         @popup = false
         @update_popup()
@@ -307,14 +309,11 @@ $ ->
       # Update whole content of node (popup, position..) according to the content of node
       update_node: (node) ->
         #console.log("Update node content", @node.title, "->", node.title)
-        console.log(@node.real, "->", node.real)
         if @node.real == node.real && @node.id == node.id
-          console.log('id :', @node.id, @node.real) if node.real
           @node = node
           @update_latlng()
         else
           console.log(@node.id, "->", node.id)
-          debugger if @node.id != node.id
           @node = node
           @update_characters() if @node.real
           @resize_marker()
@@ -339,6 +338,10 @@ $ ->
         else
           @marker.setIcon(smallPointIcon)
       
+      destroy_popup: ->
+        @marker.closePopup()
+        #@marker.unbindPopup()
+        #@popup = false
       # Update the popup
       update_popup: ->
         cont = @popup_content()
@@ -350,9 +353,7 @@ $ ->
             @marker.bindPopup cont
             @popup = true
         else
-          @marker.closePopup()
-          #@marker.unbindPopup()
-          #@popup = false
+          @destroy_popup()
         
       # Destroy popup and marker
       destroy: ->
