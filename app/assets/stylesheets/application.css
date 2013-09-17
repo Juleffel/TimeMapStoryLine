@@ -10,7 +10,9 @@
  *
  *= require_self
  *= require bootstrap_and_overrides
- *= require jquery-ui-bootstrap
+ *= require jquery.ui.all
+ *= require ui-bootstrap/jquery-ui-bootstrap
+ * require jquery-ui-bootstrap
  *= require leaflet
  *= require_tree .
  */

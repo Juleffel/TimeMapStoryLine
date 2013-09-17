@@ -53,6 +53,8 @@ $ ->
       new Date(Date.parse(str_date))
     jv_date = (str_date)->
       j_date(str_date).valueOf()
+    json_data = ($block, attr) ->
+      JSON.parse($block.data(attr))
     blank = (str)->
       (!str? || (str.length == 0))
     
@@ -299,7 +301,7 @@ $ ->
         )
         @popup = false
         @update_popup()
-        console.log @node, "created"
+        #console.log @node, "created"
       
       # Updates the position of the marker on the map
       update_latlng: ->
@@ -404,8 +406,8 @@ $ ->
     
     $date_slider = $("#date-slider")
     $date_value = $("#date-value")
-    from = j_date($date_slider.data("from"))
-    to = j_date($date_slider.data("to"))
+    from = j_date(json_data($date_slider, "from"))
+    to = j_date(json_data($date_slider, "to"))
     hour_in_ms = 1000*60*60
     day_in_ms = hour_in_ms*24
     
@@ -413,6 +415,7 @@ $ ->
     sample = hour_in_ms
     
     duration = (to-from)/sample
+    
     update_date = (date)->
       $date_value.text(date.toLocaleString())
       character_list.update_date(date)
