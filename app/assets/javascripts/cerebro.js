@@ -273,13 +273,13 @@ function init() {
         //console.log("Haven't scrolled in 250ms!");
         var ratio = sigInst.position().ratio; // Retrieve current ratio
 	  	if (Math.abs(ratio-minRatio) <= 0.1 ) {
-	  		sigInst.activateFishEye() // Activate the fish eye only on max dezoom
+	  		sigInst.activateFishEye(); // Activate the fish eye only on max dezoom
 	  	}
 	  	else {
-		  	sigInst.deactivateFishEye()
+		  	sigInst.deactivateFishEye();
 		}
     }, 250));
-  }
+  };
   
 /*** END :REMOVE FISH EYE ON ZOOM ***/
 
