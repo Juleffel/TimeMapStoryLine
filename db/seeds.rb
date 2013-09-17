@@ -16,7 +16,7 @@ Topic.destroy_all
 # Users
 User.create!({email: "juleffel@hotmail.fr", password: "password"})
 
-topics = Topic.create!([{},{},{},{},{},{},{},{},])
+topics = Topic.create!([{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},])
 
 # Characters
 haeg = Character.create!({
@@ -273,13 +273,27 @@ nodes = Node.create!([
     begin_at: "13/12/2013".to_date},
   {latitude: 15, longitude: 18, title: "Febay est parti se planquer comme un gros lâche.",
     resume: %{Bientôt, la vengeance serait sienne...},
-    begin_at: "15/12/2013".to_date},
+    begin_at: "15/12/2013".to_date,
+    topic: topics[8]},
   {latitude: 0, longitude: 120, title: "Pendant ce temps, Virus fait des sushis.",
     resume: %{},
     begin_at: "15/12/2013".to_date},
   {latitude: 59, longitude: 31, title: "Amo' powaa !",
     resume: %{},
-    begin_at: "11/12/2013".to_date},
+    begin_at: "12/12/2013".to_date,
+    topic: topics[9]},
+  {latitude: 62, longitude: 37, title: nil,
+    resume: nil,
+    begin_at: "13/12/2013".to_date,
+    topic: nil},
+  {latitude: 63, longitude: 30, title: "Amo' powaaa !",
+    resume: nil,
+    begin_at: "14/12/2013".to_date,
+    topic: topics[9]},
+  {latitude: 13, longitude: 2, title: nil,
+    resume: "Resume",
+    begin_at: "15/12/2013".to_date,
+    topic: topics[9]},
   {latitude: 39, longitude: 1.5, title: "Jason powaa !",
     resume: %{},
     begin_at: "11/12/2013".to_date},
@@ -300,7 +314,10 @@ Presence.create!([
   {node: nodes[4], character: febay},
   {node: nodes[5], character: virus},
   {node: nodes[6], character: amo},
-  {node: nodes[7], character: jason},
-  {node: nodes[8], character: ursula},
-  {node: nodes[9], character: rusty},
+  {node: nodes[7], character: amo},
+  {node: nodes[8], character: amo},
+  {node: nodes[9], character: amo},
+  {node: nodes[10], character: jason},
+  {node: nodes[11], character: ursula},
+  {node: nodes[12], character: rusty},
 ])

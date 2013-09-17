@@ -12,18 +12,29 @@ $ ->
     map = L.map('map').setView([20, 50], 2)
   
     cloudmade_api_key = $map.data("cloudmade-api-key")
-    L.Icon.Default.imageUrl = 'http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif'
+    L.Icon.Default.imagePath = "http://leafletjs.com/dist/images"
     L.tileLayer("http://{s}.tile.cloudmade.com/#{cloudmade_api_key}/997/256/{z}/{x}/{y}.png", {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
         maxZoom: 18
     }).addTo(map)
     
-    redPointIcon = L.icon
+    # smallPointIcon
+    # middlePointIcon
+    smallPointIcon = L.icon
       iconUrl: 'http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif',
-      iconRetinaUrl: 'http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif',
+      iconSize: [10, 10],
+      iconAnchor: [5, 5],
+      popupAnchor: [0, -5],
+    mediumPointIcon = L.icon
+      iconUrl: 'http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif',
       iconSize: [20, 20],
       iconAnchor: [10, 10],
       popupAnchor: [0, -10],
+    bigPointIcon = L.icon
+      iconUrl: 'http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif',
+      iconSize: [30, 30],
+      iconAnchor: [15, 15],
+      popupAnchor: [0, -15],
       #shadowUrl: 'my-icon-shadow.png',
       #shadowRetinaUrl: 'my-icon-shadow@2x.png',
       #shadowSize: [68, 95],
@@ -42,6 +53,10 @@ $ ->
       new Date(Date.parse(str_date))
     jv_date = (str_date)->
       j_date(str_date).valueOf()
+    json_data = ($block, attr) ->
+      JSON.parse($block.data(attr))
+    blank = (str)->
+      (!str? || (str.length == 0))
     
     # Class for stock and update automitically the character list and their nodes
     # @characters: models from the db
@@ -108,7 +123,6 @@ $ ->
                   @update_date(@last_date)
               10)
             15)
-            console.log(new_date)
             for c in @list
               c.update_date(new_date)
     
@@ -123,18 +137,16 @@ $ ->
       # He has'nt date, so he has'nt node_obj at the beginning
       constructor: (@character) ->
         @update_nodes()
-        @create_node_obj()
         
       # Update content and position of @node and @node_obj
       # @node_obj must exists
-      update_node_obj_all: ->
-        @node = $.extend({}, @nodes[@next_node_index])
-        @node_obj.update_node_content(@node)
+      change_node: ->
         @update_node_obj_position()
         @last_node_index = @next_node_index
       # Update position of @node and @node_obj
       # @node_obj must exists
       update_node_obj_position: ->
+        @node = $.extend({}, @nodes[@next_node_index])
         suiv_node = @nodes[@next_node_index+1]
         cur_node = @nodes[@next_node_index]
         cur_lat = cur_node.latitude
@@ -164,14 +176,14 @@ $ ->
           #console.log('diffs:', diff_lat, diff_lng, diff_dates, diff_dates_current)
         @node.latitude = new_lat
         @node.longitude = new_lng
-        @node_obj.update_node_position(@node)
+        @node_obj.update_node(@node)
       # Update @node to correspond with the date and update or recreate 
       update_node_obj: ->
         @choose_node()
         if @next_node_index != -1
           if @last_node_index != @next_node_index
             if @node_obj
-              @update_node_obj_all()
+              @change_node()
             else
               @create_node_obj()
           else
@@ -210,6 +222,10 @@ $ ->
       create_node_obj: ->
         if @next_node_index != -1
           @node = $.extend({}, @nodes[@next_node_index])
+          if j_date(@node.begin_at) <= @date && j_date(@node.end_at) >= @date
+            @node.real = true
+          else
+            @node.real = false
           @node_obj = new Node(@node)
         @last_node_index = @next_node_index
       # Delete the @node_obj
@@ -266,45 +282,79 @@ $ ->
         @marker = L.marker([@node.latitude, @node.longitude], {"draggable": true, "title": @character_names})
         #@marker.addTo(map)
         map.addLayer(@marker)
-        @marker.setIcon(redPointIcon)
+        @resize_marker()
         @marker.on('dragend', (e) =>
           latlng = @marker.getLatLng()
+          @node.latitude = latlng.lat
+          @node.longitude = latlng.lng
           if @node.real
-            @node.latitude = latlng.lat
-            @node.longitude = latlng.lng
             @update_on_server()
+          else
+            delete @node.id
+            @node.title = prompt("Titre")
+            @node.resume = prompt("Résumé")
+            delete @node.topic_id
+            @node.begin_at = character_list.last_date
+            delete @node.end_at
+            @create_on_server()
+            #@destroy()
         )
-        @create_popup()
+        @popup = false
+        @update_popup()
+        #console.log @node, "created"
       
-      # Updates only node position according to the content of node
-      # Beware to not change other fields of node, except real.
-      update_node_position: (node) ->
-        @node = node
-        @update_latlng()
       # Updates the position of the marker on the map
       update_latlng: ->
         @marker.setLatLng([@node.latitude, @node.longitude])
-        #@marker.update()
         
       # Update whole content of node (popup, position..) according to the content of node
-      update_node_content: (node) ->
-        console.log("Update node content", @node.title, "->", node.title)
-        @node = node
-        @update_popup()
+      update_node: (node) ->
+        #console.log("Update node content", @node.title, "->", node.title)
+        if @node.real == node.real && @node.id == node.id
+          @node = node
+          @update_latlng()
+        else
+          console.log(@node.id, "->", node.id)
+          @node = node
+          @update_characters() if @node.real
+          @resize_marker()
+          @update_popup()
+          @update_latlng()
+          
       popup_content: ->
-        "<h5>#{@node.title}</h5>#{@node.resume}<br><small>#{@character_names}</small>"
+        if @node.real
+          str = ""
+          str += "<h4>#{@node.title}</h4>" if !blank(@node.title)
+          str += "<p>#{@node.resume}</p>" if !blank(@node.resume)
+          str += "<small>#{@character_names}</small>" if !blank(@character_names)
+        else
+          null
         
-      # Destroy the popup
+      resize_marker: ->
+        if @node.real && @node.title && @node.title.length > 0
+          if @node.topic_id
+            @marker.setIcon(bigPointIcon)
+          else
+            @marker.setIcon(mediumPointIcon)
+        else
+          @marker.setIcon(smallPointIcon)
+      
       destroy_popup: ->
-        console.log("destroy a popup")
         @marker.closePopup()
         @marker.unbindPopup()
-      create_popup: ->
-        console.log("create a popup", @node.title)
-        @marker.bindPopup @popup_content()
+        @popup = false
+      # Update the popup
       update_popup: ->
-        console.log("update a popup", @node.title)
-        @marker.setPopupContent @popup_content()
+        cont = @popup_content()
+        if cont?
+          if @popup
+            @marker.setPopupContent cont
+          else
+            console.log("create popup", cont)
+            @marker.bindPopup cont
+            @popup = true
+        else
+          @destroy_popup()
         
       # Destroy popup and marker
       destroy: ->
@@ -325,7 +375,7 @@ $ ->
       
       # Update @node on server
       update_on_server: ->
-        alert("update a non real node !") unless @node.real
+        alert("update a non real node !") unless @node.id != 0
         $.ajax
           type: "PUT"
           url: "/nodes/"+@node.id
@@ -336,6 +386,19 @@ $ ->
             console.log "Node #{@node.id} updated on server."
           error: =>
             alert "error on server !"
+      # Create @node on server
+      create_on_server: ->
+        #alert('create on server !')
+        $.ajax
+          type: "POST"
+          url: "/nodes/"
+          data: 
+            node: @node
+          dataType: "json"
+          success: =>
+            console.log "Node #{@node.id} created on server."
+          error: =>
+            alert "error on server !"
     
     character_list = new CharacterList
     #for node in nodes
@@ -343,8 +406,8 @@ $ ->
     
     $date_slider = $("#date-slider")
     $date_value = $("#date-value")
-    from = j_date($date_slider.data("from"))
-    to = j_date($date_slider.data("to"))
+    from = j_date(json_data($date_slider, "from"))
+    to = j_date(json_data($date_slider, "to"))
     hour_in_ms = 1000*60*60
     day_in_ms = hour_in_ms*24
     
@@ -352,6 +415,7 @@ $ ->
     sample = hour_in_ms
     
     duration = (to-from)/sample
+    
     update_date = (date)->
       $date_value.text(date.toLocaleString())
       character_list.update_date(date)

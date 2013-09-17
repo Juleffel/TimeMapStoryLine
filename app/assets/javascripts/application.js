@@ -12,8 +12,9 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.ui.all
 //= require bootstrap
-//= require jquery-ui-bootstrap
+// require jquery-ui-bootstrap
 //= require leaflet
 //= require sigma
 //= require sigma.forceatlas

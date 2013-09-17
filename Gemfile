@@ -53,11 +53,13 @@ gem 'rails-i18n'
 gem 'devise'
 gem "cancan"
 
-gem "jquery-ui-bootstrap-rails-asset", :github => "Juleffel/jquery-ui-bootstrap-rails-asset"
+gem 'jquery-ui-rails', :github => "joliss/jquery-ui-rails"
+gem 'jquery-ui-bootstrap-rails', :github => "kristianmandrup/jquery-ui-bootstrap-rails"
+#gem "jquery-ui-bootstrap-rails-asset", :github => "Juleffel/jquery-ui-bootstrap-rails-asset"
 gem 'bootstrap-sass', :github => 'thomas-mcdonald/bootstrap-sass', :branch => '3'
 gem 'simple_form', :github => 'plataformatec/simple_form'
 
 gem "active_model_serializers"
 
 gem 'cloudmade'
-gem 'leaflet-rails'
+gem 'leaflet-rails', :github => 'Juleffel/leaflet-rails'
