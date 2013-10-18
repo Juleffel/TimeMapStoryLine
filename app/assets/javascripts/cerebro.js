@@ -141,8 +141,11 @@ function init() {
     
     var node = {label: character.name, attributes:[], color: 'rgb(119,221,119)'}; // Create basic node
     /* Add attributes to node */
-    node.attributes.push({attr:'name', val:'plop'});
-    node.attributes.push({attr:'age', val:'17'});
+    node.attributes.push({attr:'First name', val:character.first_name});
+    node.attributes.push({attr:'Last name', val:character.last_name});
+    node.attributes.push({attr:'Birth date', val:character.birth_date});
+    node.attributes.push({attr:'Birth place', val:character.birth_place});
+    node.attributes.push({attr:'About', val:character.anecdote});
     
 	sigInst.addNode('c'+character.id,node); // Add node to cerebro
   }
