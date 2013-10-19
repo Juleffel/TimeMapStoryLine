@@ -141,11 +141,19 @@ function init() {
     
     var node = {label: character.name, attributes:[], color: 'rgb(119,221,119)'}; // Create basic node
     /* Add attributes to node */
-    node.attributes.push({attr:'First name', val:character.first_name});
+   	node.attributes = {};
+   	node.attributes['First name'] = character.first_name;
+    node.attributes['Last name'] = character.last_name;
+    node.attributes['Birth date'] = character.birth_date;
+    node.attributes['Birth place'] = character.birth_place;
+    node.attributes['Sex'] = character.sex;
+    node.attributes['About'] = character.anecdote;
+    /*node.attributes.push({attr:'First name', val:character.first_name});
     node.attributes.push({attr:'Last name', val:character.last_name});
     node.attributes.push({attr:'Birth date', val:character.birth_date});
     node.attributes.push({attr:'Birth place', val:character.birth_place});
-    node.attributes.push({attr:'About', val:character.anecdote});
+    node.attributes.push({attr:'Sex', val:character.sex});
+    node.attributes.push({attr:'About', val:character.anecdote});*/
     
 	sigInst.addNode('c'+character.id,node); // Add node to cerebro
   }
@@ -188,6 +196,7 @@ function init() {
 	};
 /*** END : CIRCULAR LAYOUT ***/
 
+/*** FILTERS ***/
 	sigma.publicPrototype.amoFilter = function() {
 		var nodeOfInterest;
 		var neighbors = {};
@@ -208,6 +217,24 @@ function init() {
 	    
     	console.log("test");
 	};
+	
+	sigma.publicPrototype.sexFilter = function(b) {
+		sigInst.iterNodes(function(n){
+	      	if (n.attr.attributes["Sex"] == b) {
+				n.hidden = 0;
+			}
+			else {
+				n.hidden = 1;
+			}
+	    }).draw(2,2,2);
+	};
+	
+	sigma.publicPrototype.noFilter = function() {
+		sigInst.iterNodes(function(n){
+	      	n.hidden = 0;
+	    }).draw(2,2,2);
+	};
+/*** END : FILTERS ***/
   
 /*** GREY COLOR FOR NOT SELECTED NODES ***/
   var greyColor = '#666';
@@ -256,12 +283,20 @@ function init() {
     var popUp;
  
     // Create a list with every node attribute
-    function attributesToString(attr) {
+    /*function attributesToString(attr) {
       return '<ul>' +
         attr.map(function(o){
           return '<li>' + o.attr + ' : ' + o.val + '</li>';
         }).join('') +
         '</ul>';
+    }*/
+   	function attributesToString(attr) {
+   		var attrStr = '<ul>';
+  		$.each(attr, function(key, value) {
+			attrStr += '<li>' + key + ' : ' + value + '</li>';
+		});
+        attrStr += '</ul>';
+        return attrStr;
     }
  
     function showNodeInfo(event) {
@@ -275,7 +310,7 @@ function init() {
       popUp = $(
         '<div class="node-info-popup"></div>'
       ).append(
-        attributesToString( node['attr']['attributes'] )
+        attributesToString( node.attr.attributes )
       ).attr(
         'id',
         'node-info'+sigInst.getID()
@@ -336,6 +371,18 @@ function init() {
 	
 	document.getElementById('amoFilter').addEventListener('click',function(){
     	sigInst.amoFilter();
+	},true);
+	
+	document.getElementById('menFilter').addEventListener('click',function(){
+    	sigInst.sexFilter(true);
+	},true);
+	
+	document.getElementById('womenFilter').addEventListener('click',function(){
+    	sigInst.sexFilter(false);
+	},true);
+	
+	document.getElementById('noFilter').addEventListener('click',function(){
+    	sigInst.noFilter();
 	},true);
   
   

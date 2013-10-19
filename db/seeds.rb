@@ -166,7 +166,7 @@ ursula = Character.create!({
     first_name: "Ursula", last_name: "Cruela Mochtapv", 
     birth_date: "11/11/1987".to_date,
     birth_place: "Russie", 
-    sex: true, 
+    sex: false, 
     avatar_url: "",
     avatar_name: "Fiona Shaw",
     copyright: "Pidupuis",
