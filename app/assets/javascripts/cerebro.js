@@ -107,24 +107,9 @@ function init() {
   })();
 /*** END : FISH EYE ***/
 
-/*** CIRCULAR LAYOUT ***/
-	sigma.publicPrototype.myCircularLayout = function() {
-    	var R = 100,
-        	i = 0,
-        	L = this.getNodesCount();
- 
-    	this.iterNodes(function(n){
-			n.x = Math.cos(Math.PI*(i++)/L)*R;
-			n.y = Math.sin(Math.PI*(i++)/L)*R;
-    	});
- 
-		return this.position(0,0,1).draw();
-	};
-/*** END : CIRCULAR LAYOUT ***/
-
 /*** CEREBRO INSTANTIATION ***/
   var $cerebro = $(cerebro);
-  var minRatio = 1;
+  var minRatio = 0.5;
   var sigInst = sigma.init(cerebro).drawingProperties({
     defaultLabelColor: '#fff',
     defaultLabelSize: 14,
@@ -187,6 +172,42 @@ function init() {
     return this.position(0,0,1).draw();
   };
 /*** END : LAYOUT ALGORITHM ***/
+
+/*** CIRCULAR LAYOUT ***/
+	sigma.publicPrototype.myCircularLayout = function() {
+    	var R = 100,
+        	i = 0,
+        	L = this.getNodesCount();
+ 
+    	this.iterNodes(function(n){
+			n.x = Math.cos(Math.PI*(i++)/L)*R;
+			n.y = Math.sin(Math.PI*(i++)/L)*R;
+    	});
+ 
+		return this.position(0,0,1).draw();
+	};
+/*** END : CIRCULAR LAYOUT ***/
+
+	sigma.publicPrototype.amoFilter = function() {
+		var nodeOfInterest;
+		var neighbors = {};
+		sigInst.iterNodes(function(n){
+			if (n.label == "Amosis Opilion") {
+				nodeOfInterest = n;
+			}
+	    });
+	    
+	    sigInst.iterNodes(function(n){
+	      	if (n.id != nodeOfInterest.id) {
+				n.hidden = 1;
+			}
+			else {
+				n.hidden = 0;
+			}
+	    }).draw(2,2,2);
+	    
+    	console.log("test");
+	};
   
 /*** GREY COLOR FOR NOT SELECTED NODES ***/
   var greyColor = '#666';
@@ -312,6 +333,11 @@ function init() {
     document.getElementById('circular').addEventListener('click',function(){
     	sigInst.myCircularLayout();
 	},true);
+	
+	document.getElementById('amoFilter').addEventListener('click',function(){
+    	sigInst.amoFilter();
+	},true);
+  
   
 /*** END : ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
 
