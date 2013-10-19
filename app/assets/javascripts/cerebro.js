@@ -107,6 +107,21 @@ function init() {
   })();
 /*** END : FISH EYE ***/
 
+/*** CIRCULAR LAYOUT ***/
+	sigma.publicPrototype.myCircularLayout = function() {
+    	var R = 100,
+        	i = 0,
+        	L = this.getNodesCount();
+ 
+    	this.iterNodes(function(n){
+			n.x = Math.cos(Math.PI*(i++)/L)*R;
+			n.y = Math.sin(Math.PI*(i++)/L)*R;
+    	});
+ 
+		return this.position(0,0,1).draw();
+	};
+/*** END : CIRCULAR LAYOUT ***/
+
 /*** CEREBRO INSTANTIATION ***/
   var $cerebro = $(cerebro);
   var minRatio = 1;
@@ -291,7 +306,12 @@ function init() {
   sigInst.activateFishEye().draw();
   
   //sigInst.startForceAtlas2();
-  //setTimeout(function(){sigInst.stopForceAtlas2()},5000);
+  //setTimeout(function(){sigInst.stopForceAtlas2();},5000);
+
+	// Add circular layout to a button
+    document.getElementById('circular').addEventListener('click',function(){
+    	sigInst.myCircularLayout();
+	},true);
   
 /*** END : ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
 
