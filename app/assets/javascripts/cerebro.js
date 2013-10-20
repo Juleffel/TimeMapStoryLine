@@ -198,6 +198,7 @@ function init() {
 
 /*** FILTERS ***/
 	sigma.publicPrototype.amoFilter = function() {
+		console.log(sigInst);
 		var nodeOfInterest;
 		var neighbors = {};
 		sigInst.iterNodes(function(n){
@@ -206,14 +207,40 @@ function init() {
 			}
 	    });
 	    
-	    sigInst.iterNodes(function(n){
+	    sigInst.iterEdges(function(e){
+	      if(e.source == nodeOfInterest.id || e.target == nodeOfInterest.id){
+	        neighbors[e.source] = 1;
+	        neighbors[e.target] = 1;
+	      }
+	    }).iterNodes(function(n){
+	      if(!neighbors[n.id]){
+	        n.hidden = 1;
+	      }else{
+	        n.hidden = 0;
+	      }
+	    }).iterEdges(function(e){
+	    	if (e.source != nodeOfInterest.id && e.target != nodeOfInterest.id) {
+	    		e.hidden = 0;
+	    	}
+	    }).draw(2,2,2);
+	    
+	    /*sigInst.iterEdges(function(e){
+			if(e.source == nodeOfInterest.id || e.target == nodeOfInterest.id){
+		        e.hidden = 0;
+		    }
+		    else {
+		    	e.hidden = 1;
+		    }
+	    }).draw(2,2,2);*/
+	    
+	    /*sigInst.iterNodes(function(n){
 	      	if (n.id != nodeOfInterest.id) {
 				n.hidden = 1;
 			}
 			else {
 				n.hidden = 0;
 			}
-	    }).draw(2,2,2);
+	    }).draw(2,2,2);*/
 	    
     	console.log("test");
 	};
@@ -232,6 +259,8 @@ function init() {
 	sigma.publicPrototype.noFilter = function() {
 		sigInst.iterNodes(function(n){
 	      	n.hidden = 0;
+	    }).iterEdges(function(e){
+	      	e.hidden = 0;
 	    }).draw(2,2,2);
 	};
 /*** END : FILTERS ***/
