@@ -390,12 +390,15 @@ function init() {
   sigInst.myLayout();
   sigInst.activateFishEye().draw();
   
-  //sigInst.startForceAtlas2();
-  //setTimeout(function(){sigInst.stopForceAtlas2();},5000);
-
 	// Add circular layout to a button
     document.getElementById('circular').addEventListener('click',function(){
     	sigInst.myCircularLayout();
+	},true);
+	
+	// Run forceatlas
+    document.getElementById('forceAtlas').addEventListener('click',function(){
+    	sigInst.startForceAtlas2();
+  		setTimeout(function(){sigInst.stopForceAtlas2();},500);
 	},true);
 	
 	document.getElementById('amoFilter').addEventListener('click',function(){
