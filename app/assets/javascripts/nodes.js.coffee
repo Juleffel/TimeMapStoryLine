@@ -4,6 +4,7 @@
 
 $ = jQuery
 
+
 $ ->
   
   $map = $("#map")
@@ -48,6 +49,12 @@ $ ->
     characters_by_id = $map.data("characters-by-id")
     characters_updated_at = $map.data("characters-updated-at")
     
+    # TODO : choose your character
+    main_character = characters[0]
+    
+    ###################
+    # UTILS
+    ###################
     # Small functions for dates
     j_date = (str_date)->
       new Date(Date.parse(str_date))
@@ -58,16 +65,20 @@ $ ->
     blank = (str)->
       (!str? || (str.length == 0))
     
+    ###############################
     # Class for stock and update automitically the character list and their nodes
     # @characters: models from the db
     # @list: list of Character objects
     # @updated_at: store the value of @characters_updated_at at each fetch from the db
     # @last_date: store the value of the date of the slider
+    ###############################
     class CharacterList
       constructor: ->
+        # characters and characters_updated_at are data sent with the page in $map
         @characters = characters
         @construct_list()
         @updated_at = characters_updated_at
+        # Refresh data by AJAX every 3 seconds # TODO Adjust
         setInterval( =>
           @update_from_server()
         3000)
@@ -77,6 +88,10 @@ $ ->
         @list = []
         for character in @characters
           @list.push(new Character(character))
+        last_date = @last_date         
+        if last_date
+          @last_date = null
+          update_date(last_date)
       
       # Fetch characters and nodes from server
       update_from_server: ->
@@ -113,7 +128,7 @@ $ ->
         if new_date != @last_date
           @last_date = new_date
           if !@date_blocked
-            # One modif max for 500 ms
+            # One modif max for 15 ms
             @date_blocked = true
             setTimeout( =>
               @date_blocked = false
@@ -126,12 +141,14 @@ $ ->
             for c in @list
               c.update_date(new_date)
     
+    ###############################
     # A character is the character and its nodes
     # @character: Character model from server
     # @nodes: Array of nodes model from server
     # @date: date of the map, this character print his marker according to this date
     # @node: Fake node model with properties calculate by @date
     # @node_obj: class Node object corresponding to the marker, calculate and updated according to @node
+    ###############################
     class Character
       # Create the character
       # He has'nt date, so he has'nt node_obj at the beginning
@@ -164,7 +181,7 @@ $ ->
           diff_dates = jv_date(suiv_node.begin_at) - jv_date(cur_node.end_at)
           diff_dates_current = jv_date(@date) - jv_date(cur_node.end_at)
           if diff_dates == 0
-            # Nodes times are touching each other
+            # Nodes times are touching each other (Teleportation)
             # Whoops ! Warning: Div by 0 !
             new_lat = cur_lat
             new_lng = cur_lng
@@ -183,10 +200,13 @@ $ ->
         if @next_node_index != -1
           if @last_node_index != @next_node_index
             if @node_obj
+              # node has changed
               @change_node()
             else
+              # first time
               @create_node_obj()
           else
+            # Same node as before
             @update_node_obj_position()
         else
           @destroy_node_obj()
@@ -221,8 +241,10 @@ $ ->
       # Read @next_node_index and create a @node_obj
       create_node_obj: ->
         if @next_node_index != -1
+          # Copy the node in a new object
           @node = $.extend({}, @nodes[@next_node_index])
           if j_date(@node.begin_at) <= @date && j_date(@node.end_at) >= @date
+            # Date is between nood.begin_at and node.end_at
             @node.real = true
           else
             @node.real = false
@@ -240,6 +262,8 @@ $ ->
         @date = new_date
         @update_node_obj()
       # Updates all the properties of a character, even his descriptions and nodes
+      # WARNING : For the moment, do exactly the same than the next function.
+      # Reflection needed.
       update_character: (ch) ->
         @character = ch
         @update_characte_nodes(ch)
@@ -267,60 +291,224 @@ $ ->
           success: =>
             console.log "Character #{@id} updated on server."
           error: =>
-            alert "error on server !"
+            alert "Error on server ! Character #{@id} update failed."
     
+    ###########################
+    # Structure to gathering node_objs
+    ###########################
+    class NodeCollection # Not RockCollection, man
+      constructor: () ->
+        # Initiate the hash table
+        @node_objs_by_id = {}
+        @node_objs = []
+      
+      # [ Called by node_obj creation, node_obj maj
+      register: (node_obj)-> 
+        @node_objs.push(node_obj)
+        id = node_obj.node.id
+        if id
+          @node_objs_by_id[id] = node_obj
+        
+      # [ Called by node_obj_maj, node_obj_destruction
+      remove: (node_obj) ->
+        id = node_obj.node.id
+        if id
+          @node_objs_by_id[id] = null
+          delete @node_objs_by_id[id]
+        # Remove node_obj from @node_objs
+        index = -1
+        for nd_obj, ind in @node_objs
+          if nd_obj == node_obj
+            index = ind
+        if (index > -1)
+          @node_objs.splice(index, 1)
+        
+      # [ Called before register
+      fetch: (id) ->
+        node_obj = @node_objs_by_id[id]
+        if node_obj
+          node_obj
+        else
+          null
+          
+      # [ Called by d&d, at end, we add character1 to node_obj2
+      closest: (node_obj) ->
+        closest = null
+        dist = 10000 # Set max distance before keeping a node # TODO : Adjust
+        for n_obj in @node_objs
+          if n_obj != node_obj # TODO Verify, else add new ids
+            cur_dist = node_obj.distance_from(n_obj)
+            if cur_dist < dist
+              closest = n_obj
+              dist = cur_dist
+        closest
+        
+    node_collection = new NodeCollection
+    
+    ###########################
     # Class corresponding to a Marker on the map
-    # @node: node model from the server. If @node.real is true, @node correspond truly to a model in the db,
-    #   else, it's a fake node
+    # TODO : Rename Node -> Marker, node_obj -> marker
+    # @node: node model from the server. If @node.real is true, @node correspond s
+    # truly to a model in the db, else, it's a fake node.
     # @marker: marker on the map, class from Leaflet
     # @characters: characters models fetch by ids in @node.character_ids
     # @character_names: Property calculated from @characters
+    ###########################
     class Node
       # Create a marker on the map
       constructor: (@node) ->
+        @targeted = false
         @update_characters()
-        @marker = L.marker([@node.latitude, @node.longitude], {"draggable": true, "title": @character_names})
-        #@marker.addTo(map)
-        map.addLayer(@marker)
+        @marker = L.marker([@node.latitude, @node.longitude], 
+          {"draggable": true, "title": @character_names})
+          
+        @on_map = false
+        if !node_collection.fetch(@node.id)
+          node_collection.register(this)
+          map.addLayer(@marker)
+          @on_map = true
+          
         @resize_marker()
-        @marker.on('dragend', (e) =>
-          latlng = @marker.getLatLng()
-          @node.latitude = latlng.lat
-          @node.longitude = latlng.lng
-          if @node.real
-            @update_on_server()
+        
+        @marker.on('drag', (e) =>
+          closest = node_collection.closest(this)
+          if closest
+            @select_target(closest)
           else
-            delete @node.id
-            @node.title = prompt("Titre")
-            @node.resume = prompt("Résumé")
-            delete @node.topic_id
-            @node.begin_at = character_list.last_date
-            delete @node.end_at
-            @create_on_server()
-            #@destroy()
+            @deselect_target()
+        )
+        @marker.on('dragend', (e) =>
+          if @target
+            # Fuuuuusion !
+            @deselect_target()
+            
+            concerned_ch_id = null
+            if @node.character_ids.length == 1
+              concerned_ch_id = @node.character_ids[0]
+            else
+              concerned_ch_id = main_character.id
+            
+            # Join points and create a node
+            if @target.node.real
+              # Update it
+              if @node.real
+                # Target and source are real
+                # Remove character from the source
+                @remove_character(concerned_ch_id)
+                # Update target adding a character
+                @target.add_character(concerned_ch_id)
+              else
+                # Only target is real
+                # Update it adding a character
+                @target.add_character(concerned_ch_id)
+            else
+              target_ch_id = @target.node.character_ids[0]
+              if @node.real
+                # Only source is real
+                # Deplace source and update it adding a character
+                @node.latitude = @target.node.latitude
+                @node.longitude = @target.node.longitude
+                @add_character(target_ch_id)
+              else
+                # Nodes aren't real
+                # Create a new node
+                @node.latitude = @target.node.latitude
+                @node.longitude = @target.node.longitude
+                @set_node_default_values()
+                @node.character_ids.push(target_ch_id)
+                @update_characters()
+                @create_on_server()
+          else
+            latlng = @marker.getLatLng()
+            @node.latitude = latlng.lat
+            @node.longitude = latlng.lng
+            if @node.real
+              @update_on_server()
+            else
+              @create_new_real_node()
         )
         @popup = false
         @update_popup()
         #console.log @node, "created"
       
+      fill_informations: ->
+        @node.title = prompt("Titre")
+        @node.resume = prompt("Résumé")
+        delete @node.topic_id
+      set_default_dates: ->
+        @node.begin_at = character_list.last_date
+        delete @node.end_at
+      set_node_default_values: ->
+        delete @node.id
+        @fill_informations()
+        @set_default_dates()
+      create_new_real_node: ->
+        @set_node_default_values()
+        @create_on_server()
+      
       # Updates the position of the marker on the map
       update_latlng: ->
         @marker.setLatLng([@node.latitude, @node.longitude])
+      
+      # Distance fro another node_obj
+      distance_from: (node_obj)->
+        a = @node.latitude - node_obj.node.latitude
+        b = @node.longitude - node_obj.node.latitude
+        a*a+b*b
+      
+      select_target: (node_obj)->
+        @target = node_obj
+        node_obj.target() 
+      
+      deselect_target: (node_obj)->
+        @target = null
+        node_obj.untarget()
         
-      # Update whole content of node (popup, position..) according to the content of node
+      target: ->
+        @targeted = true
+        @resize_marker()
+        
+      untarget: ->
+        @targeted = false
+        @resize_marker()
+      
+      # Update whole content of node (popup, positionn, size)
+      # according to the content of node
       update_node: (node) ->
         #console.log("Update node content", @node.title, "->", node.title)
         if @node.real == node.real && @node.id == node.id
+          # The node is real and hasn't change from the last time
+          # We just make it move (normally not necessary but... ?)
           @node = node
           @update_latlng()
         else
           console.log(@node.id, "->", node.id)
+          
+          # Not the same node as before, update all attributes
+          
+          node_collection.remove(this)
+          
           @node = node
           @update_characters() if @node.real
+          
+          if node_collection.fetch(@node.id)
+            # Already present on the map (topic)
+            if @on_map
+              map.removeLayer(@marker)
+              @on_map = false
+          else
+            # Not present, add it
+            node_collection.register(this)
+            if !@on_map
+              map.addLayer(@marker)
+              @on_map = true
+            
           @resize_marker()
           @update_popup()
           @update_latlng()
           
+      # Return the content of the popup of the marker.
+      # Must be null to not create a popup
       popup_content: ->
         if @node.real
           str = ""
@@ -330,38 +518,54 @@ $ ->
         else
           null
         
+      # Change the icon of the marker according the importance of the node
       resize_marker: ->
-        if @node.real && @node.title && @node.title.length > 0
+        if @node.targeted
+          # Fusion will come
+          @marker.setIcon(bigPointIcon)
+        else if @node.real && @node.title && @node.title.length > 0
+          # Real node with a title
           if @node.topic_id
+            # This node include a topic
             @marker.setIcon(bigPointIcon)
           else
+            # This node is just an information of deplacement
             @marker.setIcon(mediumPointIcon)
         else
+          # Not real node (character is in a traject) or Node has'nt a title
           @marker.setIcon(smallPointIcon)
       
+      # Remove the marker from the map
       destroy_popup: ->
         @marker.closePopup()
         @marker.unbindPopup()
         @popup = false
-      # Update the popup
+      # Update the popup of the node, remove it if necessary
       update_popup: ->
         cont = @popup_content()
         if cont?
           if @popup
+            # Only update content
             @marker.setPopupContent cont
           else
-            console.log("create popup", cont)
+            # Create a new popup
             @marker.bindPopup cont
             @popup = true
         else
+          # Not real node
           @destroy_popup()
         
       # Destroy popup and marker
       destroy: ->
-        console.log "destroying..."
         @destroy_popup()
-        map.removeLayer(@marker)
+        if @on_map
+          node_collection.remove(this)
+          map.removeLayer(@marker)
         delete @marker
+      # Idem + on server
+      really_destroy: ->
+        @delete_on_server()
+        @destroy()
         
       # Fetch characters model by @node.character_ids
       # Calculate @character_names
@@ -372,6 +576,23 @@ $ ->
         @character_names = ""
         for character in @characters
           @character_names += character.name + ' '
+          
+      # add a character to the node (serverside too)
+      add_character: (id)->
+        @node.character_ids.push(id)
+        @update_characters()
+        @update_on_server()
+        
+      # remove a character from the node
+      # if the node has only one character, it is removed
+      remove_character: (id)->
+        if @node.character_ids.length <= 1
+          @really_destroy()
+        else
+          # TODO TODO TODO
+          # Remove character id from @node.character_ids
+          @update_characters()
+          @update_on_server()
       
       # Update @node on server
       update_on_server: ->
@@ -383,9 +604,9 @@ $ ->
             node: @node
           dataType: "json"
           success: =>
-            console.log "Node #{@node.id} updated on server."
+            #console.log "Node #{@node.id} updated on server."
           error: =>
-            alert "error on server !"
+            alert "Error on server ! Node #{@node.id} can't be updated."
       # Create @node on server
       create_on_server: ->
         #alert('create on server !')
@@ -395,15 +616,29 @@ $ ->
           data: 
             node: @node
           dataType: "json"
-          success: =>
-            console.log "Node #{@node.id} created on server."
+          success: (a, b, c, d) =>
+            console.log "Node created on server. Res :", a, ",", b, ",", c, ",", d
+            @node.id = null # TODO : set the @node.id
+            @node.real = true
           error: =>
-            alert "error on server !"
+            alert "Error on server ! Node can't be created."
+      # Update @node on server
+      delete_on_server: ->
+        alert("delete a non real node !") unless @node.id != 0
+        $.ajax
+          type: "DELETE"
+          url: "/nodes/"+@node.id
+          dataType: "json"
+          success: =>
+            console.log "Node #{@node.id} deleted on server."
+          error: =>
+            alert "Error on server ! Node #{@node.id} can't be deleted."
     
     character_list = new CharacterList
-    #for node in nodes
-    #  node_obj = new Node(node)
     
+    ###############
+    # Date Slider #
+    ###############
     $date_slider = $("#date-slider")
     $date_value = $("#date-value")
     from = j_date(json_data($date_slider, "from"))
@@ -416,10 +651,13 @@ $ ->
     
     duration = (to-from)/sample
     
+    # Send the date to the character_list
     update_date = (date)->
       $date_value.text(date.toLocaleString())
       character_list.update_date(date)
+    # Begin to the current date (the last)
     update_date(to)
+    # Set the slider correctly
     $date_slider.slider
       min: 0
       max: duration
