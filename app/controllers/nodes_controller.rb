@@ -8,6 +8,13 @@ class NodesController < ApplicationController
     @nodes_by_id = Node.hash_by(:id)
     @nodes = Node.all.includes(:characters)
     
+    # TODO TODO TODO ! Each level of updated_at must take in account the inferior level
+    # Exemple : characters_updated_at must be the max between every character.updated_at AND
+    # every node.updated_at AND every topic.updated_at
+    # The character.updated_at must also be the max of nodes.updated_at, ...
+    # Method : Make that node update updated_at of the character after updated itself
+    @characters_updated_at = @characters.maximum(:updated_at)
+    
     @characters_by_id = Character.hash_by(:id)
     #@nodes_by_begin_at = Node.hash_by(:begin_at)
     respond_to do |format|
@@ -15,7 +22,7 @@ class NodesController < ApplicationController
       format.json do
         render :json => {
           :characters => @characters.map(&:json_attributes),
-          :characters_updated_at => @characters.maximum(:updated_at),
+          :characters_updated_at => @characters_updated_at,
           :nodes_by_id => @nodes_by_id
         }
       end
