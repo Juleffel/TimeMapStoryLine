@@ -381,7 +381,6 @@ function changeColor(nodes) {
             var node;
             sigInst.iterNodes(function(n){
                         if (n.label == event.target.value) {
-                                //console.log(n.id + " : " + n.label);
                                 node = n;
                         }
                 });
@@ -396,7 +395,8 @@ function changeColor(nodes) {
       }
     }).keyup(function (e) {
     if (e.keyCode == 13) {
-        if (document.getElementById('searchNode').value == "") {
+    	if (names.indexOf(document.getElementById('searchNode').value) < 0) {
+    		document.getElementById('searchNode').value = "";
         	document.getElementById('nodeinfo').innerHTML = "";
         	changeColor(null);
         }
