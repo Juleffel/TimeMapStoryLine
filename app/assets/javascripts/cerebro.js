@@ -382,8 +382,9 @@ function changeColor(nodes) {
 	    
     $('#searchNode').autocomplete({
       source: names,
-   	  select: function(event){
-    	//console.log(event.target.value);
+   	  select: function(event, ui){
+   	  	//console.log(ui.item);
+    	document.getElementById('searchNode').value = ui.item.label;
     	
     	var node;
     	sigInst.iterNodes(function(n){
