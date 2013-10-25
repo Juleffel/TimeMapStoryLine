@@ -223,26 +223,6 @@ function init() {
 	    		e.hidden = 0;
 	    	}
 	    }).draw(2,2,2);
-	    
-	    /*sigInst.iterEdges(function(e){
-			if(e.source == nodeOfInterest.id || e.target == nodeOfInterest.id){
-		        e.hidden = 0;
-		    }
-		    else {
-		    	e.hidden = 1;
-		    }
-	    }).draw(2,2,2);*/
-	    
-	    /*sigInst.iterNodes(function(n){
-	      	if (n.id != nodeOfInterest.id) {
-				n.hidden = 1;
-			}
-			else {
-				n.hidden = 0;
-			}
-	    }).draw(2,2,2);*/
-	    
-    	console.log("test");
 	};
 	
 	sigma.publicPrototype.sexFilter = function(b) {
@@ -266,10 +246,10 @@ function init() {
 /*** END : FILTERS ***/
   
 /*** GREY COLOR FOR NOT SELECTED NODES ***/
-  var greyColor = '#666';
-  sigInst.bind('overnodes',function(event){
-    var nodes = event.content;
-    var neighbors = {};
+
+function changeColor(nodes) {
+	var neighbors = {};
+    neighbors[nodes[0]] = 1;
     sigInst.iterEdges(function(e){
       if(nodes.indexOf(e.source)<0 && nodes.indexOf(e.target)<0){
         if(!e.attr['grey']){
@@ -296,7 +276,23 @@ function init() {
         n.attr['grey'] = 0;
       }
     }).draw(2,2,2);
-  }).bind('outnodes',function(){
+}
+
+  var greyColor = '#666';
+  //sigInst.bind('overnodes',function(event){
+  sigInst.bind('downnodes',function(event){
+    var nodes = event.content;
+    //console.log(nodes);
+	changeColor(nodes);
+	
+    sigInst.iterNodes(function(n){
+		if (n.id == nodes[0]) {
+			document.getElementById('searchNode').value = n.label;
+		}
+	});
+	
+  });
+  /*.bind('outnodes',function(){
     sigInst.iterEdges(function(e){
       e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
       e.attr['grey'] = 0;
@@ -304,21 +300,13 @@ function init() {
       n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
       n.attr['grey'] = 0;
     }).draw(2,2,2);
-  });
+  });*/
 /*** END : GREY COLOR FOR NOT SELECTED NODES ***/
 
 /*** LEGEND TO NODE ***/
-  (function(){
-    var popUp;
+ // (function(){
+    //var popUp;
  
-    // Create a list with every node attribute
-    /*function attributesToString(attr) {
-      return '<ul>' +
-        attr.map(function(o){
-          return '<li>' + o.attr + ' : ' + o.val + '</li>';
-        }).join('') +
-        '</ul>';
-    }*/
    	function attributesToString(attr) {
    		var attrStr = '<ul>';
   		$.each(attr, function(key, value) {
@@ -328,7 +316,7 @@ function init() {
         return attrStr;
     }
  
-    function showNodeInfo(event) {
+    /*function showNodeInfo(event) {
       popUp && popUp.remove();
  
       var node;
@@ -363,11 +351,59 @@ function init() {
     function hideNodeInfo(event) {
       popUp && popUp.remove();
       popUp = false;
-    }
+    }*/
  	
-    sigInst.bind('overnodes',showNodeInfo).bind('outnodes',hideNodeInfo).draw();
-  })();
+    //sigInst.bind('overnodes',showNodeInfo).bind('outnodes',hideNodeInfo).draw();
+    
+    var divNodeInfo = document.getElementById('nodeinfo');
+    
+    function showNodeInfo(event) {
+ 
+      var node;
+      sigInst.iterNodes(function(n){
+        node = n;
+      },[event.content[0]]);
+   
+	  divNodeInfo.innerHTML = attributesToString( node.attr.attributes );
+ 
+      //$cerebro.append(popUp);
+    }
+    
+    sigInst.bind('downnodes',showNodeInfo).draw();
+//  })();
 /*** END : LEGEND TO NODE ***/
+
+/*** SEARCH BOX ***/
+//$(function() {
+    var names = [];
+    sigInst.iterNodes(function(n){
+		names.push(n.label);
+	});
+	    
+    $('#searchNode').autocomplete({
+      source: names,
+   	  select: function(event){
+    	//console.log(event.target.value);
+    	
+    	var node;
+    	sigInst.iterNodes(function(n){
+			if (n.label == event.target.value) {
+				console.log(n.id + " : " + n.label);
+				node = n;
+			}
+		});
+		
+		document.getElementById('nodeinfo').innerHTML = attributesToString( node.attr.attributes );
+		var nodes = [node.id];
+		changeColor(nodes);
+    	
+    	//showNodeInfo(event);
+	  }
+    });
+
+//});	  		
+
+/*** END : SEARCH BOX ***/
 
 /*** REMOVE FISH EYE ON ZOOM ***/
   document.onmousewheel = function(event){ // On mouse wheel...
