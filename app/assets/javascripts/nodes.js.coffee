@@ -315,7 +315,13 @@ $ ->
         if id
           @node_objs_by_id[id] = null
           delete @node_objs_by_id[id]
-        # TODO TODO TODO Remove node_obj from @node_objs
+        # Remove node_obj from @node_objs
+        index = -1
+        for nd_obj, ind in @node_objs
+          if nd_obj == node_obj
+            index = ind
+        if (index > -1)
+          @node_objs.splice(index, 1)
         
       # [ Called before register
       fetch: (id) ->
@@ -363,8 +369,8 @@ $ ->
           @on_map = true
           
         @resize_marker()
-        # TODO TODO TODO correct that shit
-        @marker.on('dragging', (e) =>
+        
+        @marker.on('drag', (e) =>
           closest = node_collection.closest(this)
           if closest
             @select_target(closest)
@@ -450,11 +456,11 @@ $ ->
         b = @node.longitude - node_obj.node.latitude
         a*a+b*b
       
-      select_target = (node_obj)->
+      select_target: (node_obj)->
         @target = node_obj
         node_obj.target() 
       
-      deselect_target = (node_obj)->
+      deselect_target: (node_obj)->
         @target = null
         node_obj.untarget()
         
