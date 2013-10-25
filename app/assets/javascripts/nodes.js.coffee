@@ -4,6 +4,7 @@
 
 $ = jQuery
 
+
 $ ->
   
   $map = $("#map")
@@ -646,7 +647,7 @@ $ ->
     
     # Send the date to the character_list
     update_date = (date)->
-      $date_value.text(date.toLocaleString)
+      $date_value.text(date.toLocaleString())
       character_list.update_date(date)
     # Begin to the current date (the last)
     update_date(to)
