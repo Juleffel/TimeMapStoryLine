@@ -235,7 +235,7 @@ function init() {
 	
 	sigma.publicPrototype.sexFilter = function(b) {
 		sigInst.iterNodes(function(n){
-	      	if (n.attr.attributes["Sex"] == b) {
+	      	if (n.attr["Sex"] == b) {
 				n.hidden = 0;
 			}
 			else {
@@ -254,11 +254,32 @@ function init() {
 	
 	sigma.publicPrototype.inquiFilter = function() {
 		sigInst.iterNodes(function(n){
-	      	n.hidden = 0;
-	    }).iterEdges(function(e){
-	      	e.hidden = 0;
-	    }).draw(2,2,2);
+			if (n.attr['Group'].name == "Inquisition") {
+	      		n.hidden = 0;
+	        }
+			else {
+				n.hidden = 1;
+			}
+	     }).draw(2,2,2);
 	};
+	
+	sigma.publicPrototype.groupFilter = function(groupName) {
+		if (groupName){
+			sigInst.iterNodes(function(n){
+				if (n.attr['Group'].name == groupName) {
+		      		n.hidden = 0;
+		        }
+				else {
+					n.hidden = 1;
+				}
+		     }).draw(2,2,2);
+		}
+		else {
+			sigInst.noFilter();
+		}
+	};
+	
+	
 /*** END : FILTERS ***/
   
 /*** GREY COLOR FOR NOT SELECTED NODES ***/
@@ -468,8 +489,16 @@ function changeColor(nodes) {
     	sigInst.sexFilter(false);
 	},true);
 	
+	document.getElementById('inquiFilter').addEventListener('click',function(){
+    	sigInst.inquiFilter();
+	},true);
+	
 	document.getElementById('noFilter').addEventListener('click',function(){
     	sigInst.noFilter();
+	},true);
+	
+	document.getElementById('group_name').addEventListener('change',function(){
+		sigInst.groupFilter(this.value);
 	},true);
   
   

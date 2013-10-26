@@ -5,13 +5,14 @@
 <button class="btn" id="amoFilter">Keep Amo' only</button>
 <button class="btn" id="menFilter">Keep men only</button>
 <button class="btn" id="womenFilter">Keep women only</button>
+<button class="btn" id="inquiFilter">Keep inqui only</button>
 <button class="btn" id="noFilter">No filter</button>
 <br /><br />
 <div id="searchForm" class="ui-widget">
   <label for="searchNode">Name : </label>
   <input id="searchNode" />
 </div><br />
-<%= collection_select :group, :name, Group.all, :id, :name, :include_blank => true %>
+<%= collection_select :group, :name, Group.all, :name, :name, {:include_blank => true} %>
 <br /><br />
 <%= render "links/cerebro"%>
 
