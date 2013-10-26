@@ -27,7 +27,7 @@
 
 <p>
   <strong>Sex:</strong>
-  <%= @character.sex %>
+  <% if @character.sex %> Male <% else %> Femelle <% end %>
 </p>
 
 <p>
@@ -38,6 +38,11 @@
 <p>
   <strong>Avatar name:</strong>
   <%= @character.avatar_name %>
+</p>
+
+<p>
+  <strong>Group:</strong>
+  <%= @character.group %>
 </p>
 
 <p>
