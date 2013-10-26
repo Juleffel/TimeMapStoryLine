@@ -1,7 +1,7 @@
 class Character < ActiveRecord::Base
   belongs_to :user, inverse_of: :characters
   belongs_to :topic, inverse_of: :character
-  belongs_to :group
+  belongs_to :group, inverse_of: :characters
   
   has_many :to_links, foreign_key: :from_character_id, inverse_of: :from_character, class_name: "Link"
   has_many :to_links_characters, through: :to_links, class_name: "Character", source: :to_character

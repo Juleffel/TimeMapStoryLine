@@ -7,6 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 Character.destroy_all
+Group.destroy_all
 Node.destroy_all
 Link.destroy_all
 Presence.destroy_all
@@ -15,8 +16,32 @@ Topic.destroy_all
 
 # Users
 User.create!({email: "juleffel@hotmail.fr", password: "password"})
+User.create!({email: "amo@caramail.com", password: "plopynounet"})
 
+# Topics
 topics = Topic.create!([{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},])
+
+# Groups
+inqui = Group.create!({
+  name:"Inquisition",
+  description:"L'Inquisition, c'est la faction des héros, des justifiers, des bienfaiteurs. Elle aime et chérit les citoyens de Tyral comme aucune autre organisationDeCriminels auparavant !",
+  color:"#00AAFF"
+})
+elli = Group.create!({
+  name:"Ellipsis",
+  description:"Des cobayes, des mutants, des rebelles. Pas bien original tout ça...",
+  color:"#FFAA00"
+})
+defenseur = Group.create!({
+  name:"Défenseurs",
+  description:"Là où se retrouve tous les grands noms de l'Histoire, tous ces Hommes se battant pour les libertés ! Et oui, car les haches majuscules ne servent pas qu'à couper du bois...",
+  color:"#EEEEEE"
+})
+citoy = Group.create!({
+  name:"Citoyens",
+  description:"Rien.",
+  color:"#BBBBBB"
+})
 
 # Characters
 haeg = Character.create!({
@@ -27,6 +52,7 @@ haeg = Character.create!({
     avatar_url: "http://img152.imageshack.us/img152/180/smith3et3.jpg",
     avatar_name: "Hugo Weaving",
     copyright: "Juleffel",
+    group: inqui,
     story:
 %{H – 5 minutes.
 Le laboratoire d'Haeg était en ébullition. Tout les chercheurs étaient penchés sur les écrans tactiles pour considérer toutes les variables instables. Les chiffres digitaux étaient en changements permanents. Des messages d'alertes s'affichaient souvent. Les chercheurs les considéraient un instant pour certifier que les erreurs produites n'étaient pas trop dangereuses. L'atmosphère était pesante. Haeg avait affirmé vouloir commencer l'expérience avant que toutes les variables aient pu être considérées. Le projet était bien trop complexe pour qu'ils puissent être certains du résultat. Mais le scientifique et directeur de la Typhon Corp, une installation secrète dans les tréfonds d'Aeranpolis, avait lui même mis au point cette expérience. Ces scientifiques, choisis avec le plus grand parmi les élèves les plus intelligents des académies de Tyral, surpayés à l'extrême et surveillés où qu'ils aillent pour que l'entreprise d'Haeg reste la plus secrète possible, avaient seulement fignolé les détails, géré les arrivées de matières premières, travaillé un maximum de variables dont le directeur n'avait pas eu le temps de s'occuper, et construit les machines nécessaires à cette expérience ainsi qu'à toutes celles qui suivraient. Haeg, membre de la secte Juste Fureur, propriétaire de plusieurs grandes entreprises de Tyral et de nombreuses actions partout dans le monde parmi les sociétés les plus florissantes, et multi-milliardaire affirmé, regardait d'un oeil satisfait la sorte de four devant lui. Un mince filet d'air fit voleter un pan de sa coûteuse veste noire, taillée sur mesure par un couturier de talent, derrière lui, alors que des reflets rouges teintaient toute la salle. Un prisonnier avait été détourné avec les plus grands soins du pénitencier de Tyral pour lui servir de cobaye durant cette expérience. Grâce à une technologie de l'ADN avancée qu'il avait réussit à soutirer à un scientifique travaillant au service de l'Inquisition, il avait réussit à mettre au point une idée qui le tenait depuis longtemps. Un nouveau type de guerrier, dont la peau serait d'un métal casi-indestructible, surmontée en de nombreux points de grandes piques acérées dignes de transpercer une armure de titane ou d'acier comme si c'était du beurre, et enfin, son plus grand rêve, capable de moduler le temps à son bon vouloir en perçant l'espace temps lui même. Aucune équation de ce type n'avait jamais pu réussir, mais Haeg en était certain, la sienne n'échouerait pas.
@@ -62,6 +88,7 @@ febay = Character.create!({
     avatar_url: "http://i135.photobucket.com/albums/q124/cyb3rpix/spike2copie.png",
     avatar_name: "James Marsters",
     copyright: "D.Svitanir",
+    group:elli,
     story:
 %{Quelqu’un qui se disait « Un homme qui vous veut du bien » avait envoyé une lettre à Febay pour apparemment lui montrer quelque chose qui pourrait l’intéresser. Le cerber venait de lire l’introduction écrite par cet homme. Il grogna, il n’avait pas de temps à perdre. Cet homme lui disait avoir fait quelques recherches sur lui, et avoir trouvé un témoignage de lui-même qui pourrait l’intéresser. Les neurones de très faibles capacité de Febay n’avait pas compris grand-chose au message mais avait saisit le principal : L‘information pouvait s‘avérer importante pour lui, ou par extension pour son organisation, auquel cas il la ferait passer directement à l‘inquisiteur sous les ordres duquel il était. Ce résonnement sonnait pour lui comme une évidence, un chemin obligatoire pour ses pensées. Lui qui de sa vie ne s’était jamais posé de questions sur lui-même commença un peu à se demander s’il avait un « ego ». Ses pensées furent d’un seul coup coupées par un mur invisible. Mais cela ne l’empêcha pas de lire la lettre.
 C’était un vieil article de journal découpé. On pouvait voir en haut quelques lignes : 
@@ -111,6 +138,7 @@ virus = Character.create!({
     avatar_url: "http://r21.imgfast.net/users/2114/54/74/21/avatars/52-94.jpg",
     avatar_name: "James Marsters",
     copyright: "Juleffel",
+    group:citoy,
     story:
 %{« Virus VI... Ayant d'abord atteint des sommets dans la programmation, il s'était ensuite tourné vers le piratage pour y trouver de nouveaux défis. Ayant attaqué avec succès et sans se faire repérer des réseaux surprotégés, entrant et sortant des dossiers de la CIA comme dans un moulin, il avait finit par se mettre à son compte dans un immeuble d'Alfag, au cœur des plus grand réseaux mondiaux. En devanture il proposait ses services pour créer quelques programmes à de grandes sociétés. En arrière boutique, il piratait réseau sur réseau, créant une base de donnée considérable de toutes les informations trouvées combinée sur tout ses PC. À ce jour, personne n'en possédait autant, d'autant plus que sa base s'agrandissait chaque jour. C'était un vieil ami d'Haeg, et ce dernier était le seul à connaître l'existence de ces données. Il l'avait deviné au fil de leur conversations et l'avait finalement poussé à avoué. Mais il ne s'en servait qu'avec parcimonie, de peur que d'autres ne comprennent le trésor qu'il gardait caché. Virus lui ne cherchait pas à utiliser ses trouvailles, seul le défi l'intéressait, et il disait que cela lui suffisait largement. Haeg le suspectait d'attendre son heure, ne pouvant croire à ce pouvoir gardé inutilisé et irrévélé, mais rien dans son comportement ne montrait qu'il ne voulait autre chose. Un jour peut-être parviendrait-il à le convaincre de faire un duo détonnant et de bousculer un peu les pouvoirs en place. »
 Ainsi Virus VI est-il décrit par Haeg la première fois qu'il entre dans le RP. Cependant, depuis ce temps, les choses ont changé. Virus VI a rencontré quelques problèmes avec les Ellipsis et doit maintenant sa survie à la protection d'Haeg Ponak qui lui a offert un appartement proche du sien, tout cela en échange de son aide et des ses bases de données, comme dirait Haeg, « L'information, c'est la base du pouvoir ». Désormais, les deux hommes sont régulièrement ensembles « pour affaires », Haeg ayant souvent besoin de lui pour pirater un réseau, ou pour accomplir une tache que seul un homme en qui il a entièrement confiance peut faire. Nul n'ignore désormais cet état de fait, et personne ne se risque à le gêner.
@@ -134,6 +162,7 @@ amo = Character.create!({
     avatar_url: "",
     avatar_name: "Brad Pitt",
     copyright: "Pidupuis",
+    group:defenseur,
     story:
 %{Archéologue maudit depuis qu'il a profané une tombe.},
     resume:
@@ -152,6 +181,7 @@ jason = Character.create!({
     avatar_url: "",
     avatar_name: "Jason Statham",
     copyright: "Pidupuis",
+    group:inqui,
     story:
 %{Mec qui se transforme en fumée.},
     resume:
@@ -170,6 +200,7 @@ ursula = Character.create!({
     avatar_url: "",
     avatar_name: "Fiona Shaw",
     copyright: "Pidupuis",
+    group:elli,
     story:
 %{Madame moche qui se transforme en autruche.},
     resume:
@@ -188,6 +219,7 @@ rusty = Character.create!({
     avatar_url: "",
     avatar_name: "Dennis Haysbert",
     copyright: "Pidupuis",
+    group:inqui,
     story:
 %{Inquisiteur tout bronzé qui a mimé la création d'un exosquelette de verre par les diatomées.},
     resume:
@@ -206,6 +238,7 @@ loby = Character.create!({
     avatar_url: "",
     avatar_name: "...",
     copyright: "Juleffel",
+    group:citoy,
     story:
 %{N.R.},
     resume:
