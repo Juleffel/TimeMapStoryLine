@@ -135,21 +135,23 @@ function init() {
   var characters_by_id = $cerebro.data('characters_by_id');
   var links = $cerebro.data('links');
   var links_by_id = $cerebro.data('links_by_id');
+  console.log(characters);
   
   /* NODES */
   for (var ch_ind in characters) {
     character = characters[ch_ind];
     //console.log("Add character", character, character.id, character.name);
     
-    var node = {label: character.name, attributes:[], color: defaultColor}; // Create basic node
+    var node = {label: character.name, color: character.group.color}; // Create basic node
     /* Add attributes to node */
-   	node.attributes = {};
-   	node.attributes['First name'] = character.first_name;
-    node.attributes['Last name'] = character.last_name;
-    node.attributes['Birth date'] = character.birth_date;
-    node.attributes['Birth place'] = character.birth_place;
-    node.attributes['Sex'] = character.sex;
-    node.attributes['About'] = character.anecdote;
+    node['Group'] = character.group;
+    node['TrueColor'] = character.group.color;
+   	node['First name'] = character.first_name;
+    node['Last name'] = character.last_name;
+    node['Birth date'] = character.birth_date;
+    node['Birth place'] = character.birth_place;
+    node['Sex'] = character.sex;
+    node['About'] = character.anecdote;
     /*node.attributes.push({attr:'First name', val:character.first_name});
     node.attributes.push({attr:'Last name', val:character.last_name});
     node.attributes.push({attr:'Birth date', val:character.birth_date});
@@ -195,6 +197,7 @@ function init() {
     	this.iterNodes(function(n){
 			n.x = Math.cos(Math.PI*(i++)/L)*R;
 			n.y = Math.sin(Math.PI*(i++)/L)*R;
+			console.log(n);
     	});
  
 		return this.position(0,0,1).draw();
@@ -248,6 +251,14 @@ function init() {
 	      	e.hidden = 0;
 	    }).draw(2,2,2);
 	};
+	
+	sigma.publicPrototype.inquiFilter = function() {
+		sigInst.iterNodes(function(n){
+	      	n.hidden = 0;
+	    }).iterEdges(function(e){
+	      	e.hidden = 0;
+	    }).draw(2,2,2);
+	};
 /*** END : FILTERS ***/
   
 /*** GREY COLOR FOR NOT SELECTED NODES ***/
@@ -255,7 +266,8 @@ function init() {
 function changeColor(nodes) {
 	if (nodes == null) {
 		sigInst.iterNodes(function(n){
-			n.color = defaultColor;
+			n.color = n.attr['TrueColor'];
+			console.log(n);
 		}).iterEdges(function(e){
 			e.color = defaultColor;
 		}).draw(2,2,2);
@@ -275,7 +287,7 @@ function changeColor(nodes) {
 	      if(!neighbors[n.id]){
 	        n.color = deselectColor;
 	      }else{
-	        n.color = defaultColor;
+	        n.color = n.attr['TrueColor'];
 	      }
 	    }).draw(2,2,2);
     }
@@ -356,7 +368,7 @@ function changeColor(nodes) {
         node = n;
       },[event.content[0]]);
    
-	  divNodeInfo.innerHTML = attributesToString( node.attr.attributes );
+	  divNodeInfo.innerHTML = attributesToString( node.attr );
  
       //$cerebro.append(popUp);
     }
@@ -386,7 +398,7 @@ function changeColor(nodes) {
                 });
                 
                 if (node) {
-                	document.getElementById('nodeinfo').innerHTML = attributesToString( node.attr.attributes );
+                	document.getElementById('nodeinfo').innerHTML = attributesToString( node.attr );
                 	var nodes = [node.id];
                 	changeColor(nodes);
                }
