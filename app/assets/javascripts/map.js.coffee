@@ -81,7 +81,7 @@ $ ->
         # Refresh data by AJAX every 3 seconds # TODO Adjust
         setInterval( =>
           @update_from_server()
-        3000)
+        1000)
       
       # Destroy and recreate the list of the characters objects
       construct_list: ->
@@ -106,6 +106,8 @@ $ ->
       update: (characters, characters_updated_at)->
         @characters = characters
         if characters_updated_at != @updated_at
+          @updated_at = characters_updated_at
+          console.log "chars updated"
           # A character has changed
           if characters.length == @list.length
             for new_ch, ind in characters
@@ -116,9 +118,11 @@ $ ->
                 break
               if old_ch.updated_at != new_ch.updated_at
                 # Character updated
+                console.log "ch", new_ch, "updated"
                 @list[ind].update_character(new_ch)
               else if old_ch.nodes_updated_at != new_ch.nodes_updated_at
                 # Character_node updated
+                console.log "ch nodes", new_ch, "updated"
                 @list[ind].update_character_nodes(new_ch)
           else
             # not the same number of characters as before
@@ -270,7 +274,7 @@ $ ->
       # Reflection needed.
       update_character: (ch) ->
         @character = ch
-        @update_characte_nodes(ch)
+        @update_character_nodes(ch)
       # Refetch nodes, remove node_obj and recreate it
       update_character_nodes: (ch) ->
         @character = ch
