@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130815164028) do
+ActiveRecord::Schema.define(version: 20131026181636) do
 
   create_table "characters", force: true do |t|
     t.integer  "user_id"
@@ -30,10 +30,26 @@ ActiveRecord::Schema.define(version: 20130815164028) do
     t.text     "anecdote"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "faction_id"
+    t.integer  "group_id"
   end
 
   add_index "characters", ["topic_id"], name: "index_characters_on_topic_id", using: :btree
   add_index "characters", ["user_id"], name: "index_characters_on_user_id", using: :btree
+
+  create_table "factions", force: true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "groups", force: true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "links", force: true do |t|
     t.integer  "from_character_id"
