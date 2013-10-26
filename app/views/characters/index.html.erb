@@ -28,10 +28,10 @@
         <td><%= character.last_name %></td>
         <td><%= character.birth_date %></td>
         <td><%= character.birth_place %></td>
-        <td><%= character.sex %></td>
+        <td><% if character.sex %> Male <% else %> Femelle <% end %></td>
         <td><%= character.avatar_url %></td>
         <td><%= character.avatar_name %></td>
-        <td><%= character.group.name %></td>
+        <td><%= character.group %></td>
         <td><%= character.copyright %></td>
         <td><%= character.topic %></td>
         <td><%= link_to 'Show', character %></td>

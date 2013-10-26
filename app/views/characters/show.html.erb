@@ -27,7 +27,7 @@
 
 <p>
   <strong>Sex:</strong>
-  <%= @character.sex %>
+  <% if @character.sex %> Male <% else %> Femelle <% end %>
 </p>
 
 <p>

@@ -11,6 +11,8 @@ class Character < ActiveRecord::Base
   has_many :presences, inverse_of: :character
   has_many :nodes, through: :presences
   
+  #validates_inclusion_of :sex, :in => %w( m f )
+  
   default_scope -> {order(:id)}
   
   def to_s
