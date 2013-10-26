@@ -172,9 +172,12 @@ $ ->
         if !suiv_node || j_date(cur_node.end_at) >= @date
           if j_date(cur_node.begin_at) <= @date && j_date(cur_node.end_at) >= @date
             @node.real = true
+          else
+            @node.id = undefined
           new_lat = cur_lat
           new_lng = cur_lng
         else
+          @node.id = undefined
           # We are between two nodes
           diff_lat = suiv_node.latitude - cur_lat
           diff_lng = suiv_node.longitude - cur_lng
@@ -248,6 +251,7 @@ $ ->
             @node.real = true
           else
             @node.real = false
+            @node.id = undefined
           @node_obj = new Node(@node)
         @last_node_index = @next_node_index
       # Delete the @node_obj
@@ -334,7 +338,7 @@ $ ->
       # [ Called by d&d, at end, we add character1 to node_obj2
       closest: (node_obj) ->
         closest = null
-        dist = 10000 # Set max distance before keeping a node # TODO : Adjust
+        dist = 40 # Set max distance before keeping a node # TODO : Adjust
         for n_obj in @node_objs
           if n_obj != node_obj # TODO Verify, else add new ids
             cur_dist = node_obj.distance_from(n_obj)
@@ -367,21 +371,20 @@ $ ->
           node_collection.register(this)
           map.addLayer(@marker)
           @on_map = true
+        else
+          console.log "#{@node.id} already present"
           
         @resize_marker()
         
         @marker.on('drag', (e) =>
           closest = node_collection.closest(this)
+          @deselect_target()
           if closest
             @select_target(closest)
-          else
-            @deselect_target()
         )
         @marker.on('dragend', (e) =>
           if @target
-            # Fuuuuusion !
-            @deselect_target()
-            
+            # Fuuuuusion !            
             concerned_ch_id = null
             if @node.character_ids.length == 1
               concerned_ch_id = @node.character_ids[0]
@@ -418,6 +421,7 @@ $ ->
                 @node.character_ids.push(target_ch_id)
                 @update_characters()
                 @create_on_server()
+            @deselect_target()
           else
             latlng = @marker.getLatLng()
             @node.latitude = latlng.lat
@@ -452,23 +456,25 @@ $ ->
       
       # Distance fro another node_obj
       distance_from: (node_obj)->
-        a = @node.latitude - node_obj.node.latitude
-        b = @node.longitude - node_obj.node.latitude
-        a*a+b*b
+        latlng = @marker.getLatLng()
+        a = latlng.lat - node_obj.node.latitude
+        b = latlng.lng - node_obj.node.longitude
+        (a*a+b*b)
       
       select_target: (node_obj)->
         @target = node_obj
-        node_obj.target() 
+        node_obj.is_targeted() 
       
-      deselect_target: (node_obj)->
+      deselect_target: ()->
+        if @target
+          @target.is_untargeted()
         @target = null
-        node_obj.untarget()
         
-      target: ->
+      is_targeted: ->
         @targeted = true
         @resize_marker()
         
-      untarget: ->
+      is_untargeted: ->
         @targeted = false
         @resize_marker()
       
@@ -520,7 +526,7 @@ $ ->
         
       # Change the icon of the marker according the importance of the node
       resize_marker: ->
-        if @node.targeted
+        if @targeted
           # Fusion will come
           @marker.setIcon(bigPointIcon)
         else if @node.real && @node.title && @node.title.length > 0
