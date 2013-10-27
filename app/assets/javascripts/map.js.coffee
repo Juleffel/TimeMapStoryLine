@@ -114,6 +114,8 @@ $ ->
               old_ch = @list[ind].character
               if old_ch.id != new_ch.id
                 # Not the same character at the same position as before
+                console.log "Not the same character at the same position as before"
+                debugger
                 @construct_list()
                 break
               if old_ch.updated_at != new_ch.updated_at
@@ -126,6 +128,8 @@ $ ->
                 @list[ind].update_character_nodes(new_ch)
           else
             # not the same number of characters as before
+            console.log "Not the same number of characters as before"
+            debugger
             @construct_list()
       # Updates the date for all the characters of the map
       update_date: (new_date)->
@@ -513,9 +517,7 @@ $ ->
               map.addLayer(@marker)
               @on_map = true
             
-          @resize_marker()
-          @update_popup()
-          @update_latlng()
+          @update_marker()
           
       # Return the content of the popup of the marker.
       # Must be null to not create a popup
@@ -564,6 +566,10 @@ $ ->
         else
           # Not real node
           @destroy_popup()
+      update_marker: ->
+        @resize_marker()
+        @update_popup()
+        @update_latlng()
         
       # Destroy popup and marker
       destroy: ->
@@ -607,6 +613,7 @@ $ ->
       # Update @node on server
       update_on_server: ->
         alert("update a non real node !") unless @node.id != 0
+        @update_marker()
         $.ajax
           type: "PUT"
           url: "/nodes/"+@node.id
@@ -620,6 +627,7 @@ $ ->
       # Create @node on server
       create_on_server: ->
         #alert('create on server !')
+        @update_marker()
         $.ajax
           type: "POST"
           url: "/nodes/"
