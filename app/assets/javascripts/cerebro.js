@@ -122,7 +122,7 @@ function init() {
     labelThreshold: 6,
     defaultEdgeType: 'curve'
   }).graphProperties({
-    minNodeSize: 0.5,
+    minNodeSize: 1,
     maxNodeSize: 4,
     minEdgeSize: 1,
     maxEdgeSize: 1
@@ -428,7 +428,7 @@ function changeColor(nodes) {
 /*** ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
 	sigInst.myCircularLayout();
 	sigInst.startForceAtlas2();
-	sigInst.activateFishEye();
+	sigInst.deactivateFishEye();
 	
   //sigInst.myLayout();
   //sigInst.activateFishEye().draw();
