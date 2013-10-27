@@ -13,7 +13,7 @@ function init() {
       var isActivated = false;               // Describes is the FishEye is activated.
  
       this.p = {                             // The object containing the properties accessible with
-        radius: 200,                         // the Cascade.config() method.
+        radius: 100,                         // the Cascade.config() method.
         power: 2
       };
  
@@ -108,8 +108,9 @@ function init() {
 /*** END : FISH EYE ***/
 
 /*** CEREBRO INSTANTIATION ***/
-  var defaultColor = 'rgb(119,221,119)';
-  var deselectColor = '#666';
+  //var defaultColor = 'rgb(119,221,119)';
+  var defaultColor = '#fff';
+  var deselectColor = '#000';
   var $cerebro = $(cerebro);
   var minRatio = 0.5;
   var sigInst = sigma.init(cerebro).drawingProperties({
@@ -121,7 +122,7 @@ function init() {
     defaultEdgeType: 'curve'
   }).graphProperties({
     minNodeSize: 0.5,
-    maxNodeSize: 5,
+    maxNodeSize: 4,
     minEdgeSize: 1,
     maxEdgeSize: 1
   }).mouseProperties({
@@ -132,32 +133,30 @@ function init() {
 
 /*** NODE AND EDGE INSTANTIATION ***/
   var characters = $cerebro.data('characters');
-  var characters_by_id = $cerebro.data('characters_by_id');
+  var characters_by_id = $cerebro.data('characters-by-id');
   var links = $cerebro.data('links');
-  var links_by_id = $cerebro.data('links_by_id');
-  console.log(characters);
+  var links_by_id = $cerebro.data('links-by-id');
+  var groups = $cerebro.data('groups');
+  var groups_by_id = $cerebro.data('groups-by-id');
   
   /* NODES */
   for (var ch_ind in characters) {
     character = characters[ch_ind];
-    //console.log("Add character", character, character.id, character.name);
     
-    var node = {label: character.name, color: character.group.color}; // Create basic node
+    var node = {label: character.name, color: groups_by_id[character.group_id].color}; // Create basic node
+
     /* Add attributes to node */
-    node['Group'] = character.group;
-    node['TrueColor'] = character.group.color;
    	node['First name'] = character.first_name;
     node['Last name'] = character.last_name;
     node['Birth date'] = character.birth_date;
     node['Birth place'] = character.birth_place;
     node['Sex'] = character.sex;
+    node['Group'] = groups_by_id[character.group_id].name;
     node['About'] = character.anecdote;
-    /*node.attributes.push({attr:'First name', val:character.first_name});
-    node.attributes.push({attr:'Last name', val:character.last_name});
-    node.attributes.push({attr:'Birth date', val:character.birth_date});
-    node.attributes.push({attr:'Birth place', val:character.birth_place});
-    node.attributes.push({attr:'Sex', val:character.sex});
-    node.attributes.push({attr:'About', val:character.anecdote});*/
+    
+    node['temp'] = [];
+	node['temp']['group_id'] = character.group_id;
+    node['temp']['true_color'] = node.color;
     
 	sigInst.addNode('c'+character.id,node); // Add node to cerebro
   }
@@ -165,7 +164,6 @@ function init() {
   /* EDGES */
   for (var li_ind in links) {
     link = links[li_ind];
-    //console.log("Add link", link, link.id, link.from_character_id, link.to_character_id);
     sigInst.addEdge(
       'l'+link.id,
       'c'+link.from_character_id,
@@ -197,7 +195,6 @@ function init() {
     	this.iterNodes(function(n){
 			n.x = Math.cos(Math.PI*(i++)/L)*R;
 			n.y = Math.sin(Math.PI*(i++)/L)*R;
-			console.log(n);
     	});
  
 		return this.position(0,0,1).draw();
@@ -206,7 +203,6 @@ function init() {
 
 /*** FILTERS ***/
 	sigma.publicPrototype.amoFilter = function() {
-		//console.log(sigInst);
 		var nodeOfInterest;
 		var neighbors = {};
 		sigInst.iterNodes(function(n){
@@ -254,7 +250,7 @@ function init() {
 	
 	sigma.publicPrototype.inquiFilter = function() {
 		sigInst.iterNodes(function(n){
-			if (n.attr['Group'].name == "Inquisition") {
+			if (groups_by_id[n.attr['temp']['group_id']].name == "Inquisition") {
 	      		n.hidden = 0;
 	        }
 			else {
@@ -266,7 +262,7 @@ function init() {
 	sigma.publicPrototype.groupFilter = function(groupName) {
 		if (groupName){
 			sigInst.iterNodes(function(n){
-				if (n.attr['Group'].name == groupName) {
+				if (groups_by_id[n.attr['temp']['group_id']].name == groupName) {
 		      		n.hidden = 0;
 		        }
 				else {
@@ -287,8 +283,7 @@ function init() {
 function changeColor(nodes) {
 	if (nodes == null) {
 		sigInst.iterNodes(function(n){
-			n.color = n.attr['TrueColor'];
-			console.log(n);
+			n.color = n.attr['temp']['true_color'];
 		}).iterEdges(function(e){
 			e.color = defaultColor;
 		}).draw(2,2,2);
@@ -308,13 +303,12 @@ function changeColor(nodes) {
 	      if(!neighbors[n.id]){
 	        n.color = deselectColor;
 	      }else{
-	        n.color = n.attr['TrueColor'];
+	        n.color = n.attr['temp']['true_color'];
 	      }
 	    }).draw(2,2,2);
     }
 }
 
-  var greyColor = '#666';
   sigInst.bind('downnodes',function(event){
     var nodes = event.content;
 	changeColor(nodes);
@@ -335,7 +329,9 @@ function changeColor(nodes) {
    	function attributesToString(attr) {
    		var attrStr = '<ul>';
   		$.each(attr, function(key, value) {
-			attrStr += '<li>' + key + ' : ' + value + '</li>';
+  			if (key != "temp") {
+				attrStr += '<li>' + key + ' : ' + value + '</li>';
+			}
 		});
         attrStr += '</ul>';
         return attrStr;
@@ -408,7 +404,6 @@ function changeColor(nodes) {
     $('#searchNode').autocomplete({
       source: names,
       select: function(event, ui){
-            //console.log(ui.item);
             document.getElementById('searchNode').value = ui.item.label;
             
             var node;
@@ -449,7 +444,6 @@ function changeColor(nodes) {
   document.onmousewheel = function(event){ // On mouse wheel...
   	clearTimeout($.data(this, 'scrollTimer'));
     $.data(this, 'scrollTimer', setTimeout(function() {
-        //console.log("Haven't scrolled in 250ms!");
         var ratio = sigInst.position().ratio; // Retrieve current ratio
 	  	if (Math.abs(ratio-minRatio) <= 0.1 ) {
 	  		sigInst.activateFishEye(); // Activate the fish eye only on max dezoom

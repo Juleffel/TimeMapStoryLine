@@ -5,4 +5,16 @@ class Group < ActiveRecord::Base
     name
   end
   
+  def json_attributes
+    attributes
+  end
+  
+  def self.hash_by(key)
+    hash = {}
+    self.all.each do |obj|
+      hash[obj.send(key)] = obj.json_attributes
+    end
+    hash
+  end
+  
 end
