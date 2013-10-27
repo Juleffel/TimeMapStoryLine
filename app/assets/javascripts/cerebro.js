@@ -113,6 +113,7 @@ function init() {
   var deselectColor = '#000';
   var $cerebro = $(cerebro);
   var minRatio = 0.5;
+  var deltaRatio = 0.1;
   var sigInst = sigma.init(cerebro).drawingProperties({
     defaultLabelColor: '#fff',
     defaultLabelSize: 14,
@@ -411,11 +412,13 @@ function changeColor(nodes) {
     	   probably filled by a puddle of your last lunch...)
     	   */
         var ratio = sigInst.position().ratio; // Retrieve current ratio
-	  	if (Math.abs(ratio-minRatio) <= 0.1 ) {
-	  		sigInst.activateFishEye(); // Activate the fish eye only on max dezoom
+	  	if (Math.abs(ratio-minRatio) <= deltaRatio ) {
+	  		if(!isRunning)
+	  			if (fishEyeOn)
+		  			sigInst.activateFishEye(); // Activate the fish eye only on max dezoom
 	  	}
 	  	else {
-		  	sigInst.deactivateFishEye();
+			sigInst.deactivateFishEye();
 		}
     }, 250));
   };
@@ -423,7 +426,11 @@ function changeColor(nodes) {
 /*** END :REMOVE FISH EYE ON ZOOM ***/
 
 /*** ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
-  sigInst.myLayout();
+	sigInst.myCircularLayout();
+	sigInst.startForceAtlas2();
+	sigInst.activateFishEye();
+	
+  //sigInst.myLayout();
   //sigInst.activateFishEye().draw();
 /*** END : ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
 
@@ -435,24 +442,43 @@ function changeColor(nodes) {
 	},true);
 	
 	// Run forceatlas
-	var isRunning = false;
+	var isRunning = true;
     document.getElementById('forceAtlas').addEventListener('click',function(){
 	    if(isRunning){
 	      isRunning = false;
 	      sigInst.stopForceAtlas2();
-	    document.getElementById('forceAtlas').childNodes[0].nodeValue = 'Start Layout';
+	      if (fishEyeOn)
+	      	if (Math.abs(sigInst.position().ratio-minRatio) <= deltaRatio )
+	      		sigInst.activateFishEye();
+	      document.getElementById('forceAtlas').childNodes[0].nodeValue = 'Start Layout';
 	    }else{
 	      isRunning = true;
 	      sigInst.startForceAtlas2();
+	      sigInst.deactivateFishEye();
 	      document.getElementById('forceAtlas').childNodes[0].nodeValue = 'Stop Layout';
+	    }
+    },true);
+    
+    // Button fish eye
+    var fishEyeOn = true;
+    document.getElementById('fishEye').addEventListener('click',function(){
+	    if(fishEyeOn){
+	      fishEyeOn = false;
+	      sigInst.deactivateFishEye();
+	      document.getElementById('fishEye').childNodes[0].nodeValue = 'Put Fish Eye ON';
+	    }else{
+	      fishEyeOn = true;
+	  	  if (Math.abs(sigInst.position().ratio-minRatio) <= deltaRatio )
+	      	sigInst.activateFishEye();
+	      document.getElementById('fishEye').childNodes[0].nodeValue = 'Put Fish Eye OFF';
 	    }
     },true);
 	
 	// Button filters
-	document.getElementById('amoFilter').addEventListener('click',function(){
+	/*document.getElementById('amoFilter').addEventListener('click',function(){
     	sigInst.amoFilter();
 	},true);
-	/*document.getElementById('menFilter').addEventListener('click',function(){
+	document.getElementById('menFilter').addEventListener('click',function(){
     	sigInst.sexFilter(true);
 	},true);
 	document.getElementById('womenFilter').addEventListener('click',function(){
