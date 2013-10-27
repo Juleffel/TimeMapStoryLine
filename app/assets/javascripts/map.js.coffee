@@ -589,7 +589,6 @@ $ ->
         if @on_map
           node_collection.remove(this)
           map.removeLayer(@marker)
-        delete @marker
       # Idem + on server
       really_destroy: ->
         @delete_on_server()

@@ -21,4 +21,5 @@ class Node < ActiveRecord::Base
   end
   
   after_save -> { characters.each(&:touch) }
+  before_destroy -> { characters.each(&:touch) }
 end
