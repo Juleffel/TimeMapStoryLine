@@ -115,30 +115,27 @@ $ ->
         @characters = characters
         if characters_updated_at != @updated_at
           @updated_at = characters_updated_at
-          console.log "chars updated"
+          #console.log "chars updated"
           # A character has changed
           if characters.length == @list.length
             for new_ch, ind in characters
               old_ch = @list[ind].character
               if old_ch.id != new_ch.id
                 # Not the same character at the same position as before
-                console.log "Not the same character at the same position as before"
-                debugger
                 @construct_list()
                 break
               if old_ch.updated_at != new_ch.updated_at
                 # Character updated
-                console.log "ch", new_ch, "updated"
+                #console.log "ch", new_ch, "updated"
                 @list[ind].update_character(new_ch)
               else if old_ch.nodes_updated_at != new_ch.nodes_updated_at
                 # Character_node updated
-                console.log "ch nodes", new_ch, "updated"
+                #console.log "ch nodes", new_ch, "updated"
                 @list[ind].update_character_nodes(new_ch)
           else
             # not the same number of characters as before
             console.log "Not the same number of characters as before"
-            console.log characters
-            debugger
+            #console.log characters
             @construct_list()
       # Updates the date for all the characters of the map
       update_date: (new_date)->
