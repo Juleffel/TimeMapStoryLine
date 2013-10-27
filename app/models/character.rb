@@ -24,7 +24,7 @@ class Character < ActiveRecord::Base
   end
   
   def json_attributes
-    attributes.merge({node_ids: nodes.order(:begin_at).map(&:id), nodes_updated_at: nodes_updated_at, to_link_ids: to_link_ids, name: to_s, group: group})
+    attributes.merge({node_ids: nodes.order(:begin_at).map(&:id), nodes_updated_at: nodes_updated_at, to_link_ids: to_link_ids, name: to_s})
   end
   
   def self.hash_by(key)
