@@ -173,7 +173,10 @@ function init() {
   }
   sigInst.iterEdges(function(e){
 	      e.color = defaultColor;
+	      console.log(e);
   }).draw(2,2,2);
+  
+
 /*** END : NODE AND EDGE INSTANTIATION ***/
   
 /*** LAYOUT ALGORITHM ***/
@@ -389,7 +392,7 @@ function changeColor(nodes) {
       }
     }).keyup(function (e) {
 	    if (e.keyCode == 13) { // System to handle the use of the "Enter" key
-	    	if (names.indexOf(document.getElementById('searchNode').value) < 0) { // If the current value does not correspond to a node name, we consider this as an expected deselection
+	    	if (namesForSearchBox.indexOf(document.getElementById('searchNode').value) < 0) { // If the current value does not correspond to a node name, we consider this as an expected deselection
 	    		emptySearchBox();
 	        }
 	    }
@@ -421,7 +424,7 @@ function changeColor(nodes) {
 
 /*** ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
   sigInst.myLayout();
-  sigInst.activateFishEye().draw();
+  //sigInst.activateFishEye().draw();
 /*** END : ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
 
 /*** ADD EVENTS ***/
@@ -432,10 +435,18 @@ function changeColor(nodes) {
 	},true);
 	
 	// Run forceatlas
+	var isRunning = false;
     document.getElementById('forceAtlas').addEventListener('click',function(){
-    	sigInst.startForceAtlas2();
-  		setTimeout(function(){sigInst.stopForceAtlas2();},500);
-	},true);
+	    if(isRunning){
+	      isRunning = false;
+	      sigInst.stopForceAtlas2();
+	    document.getElementById('forceAtlas').childNodes[0].nodeValue = 'Start Layout';
+	    }else{
+	      isRunning = true;
+	      sigInst.startForceAtlas2();
+	      document.getElementById('forceAtlas').childNodes[0].nodeValue = 'Stop Layout';
+	    }
+    },true);
 	
 	// Button filters
 	document.getElementById('amoFilter').addEventListener('click',function(){
