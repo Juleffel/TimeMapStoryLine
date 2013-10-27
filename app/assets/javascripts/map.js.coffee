@@ -46,6 +46,7 @@ $ ->
     nodes_by_id = $map.data("nodes-by-id")
     #nodes_by_begin_at = $map.data("nodes-by-begin-at")
     characters = $map.data("characters")
+    console.log(characters)
     characters_by_id = $map.data("characters-by-id")
     characters_updated_at = $map.data("characters-updated-at")
     
@@ -83,9 +84,15 @@ $ ->
           @update_from_server()
         1000)
       
+      destroy_list: ->
+        if @list
+          for character in @list
+            character.destroy()
+        @list = []
+      
       # Destroy and recreate the list of the characters objects
       construct_list: ->
-        @list = []
+        @destroy_list()
         for character in @characters
           @list.push(new Character(character))
         last_date = @last_date         
@@ -101,35 +108,34 @@ $ ->
           dataType: "json"
           success: (data) =>
             nodes_by_id = data.nodes_by_id
+            characters_by_id = data.characters_by_id
             @update(data.characters, data.characters_updated_at)
       # Update only the characters that have been changed since the last fetch
       update: (characters, characters_updated_at)->
         @characters = characters
         if characters_updated_at != @updated_at
           @updated_at = characters_updated_at
-          console.log "chars updated"
+          #console.log "chars updated"
           # A character has changed
           if characters.length == @list.length
             for new_ch, ind in characters
               old_ch = @list[ind].character
               if old_ch.id != new_ch.id
                 # Not the same character at the same position as before
-                console.log "Not the same character at the same position as before"
-                debugger
                 @construct_list()
                 break
               if old_ch.updated_at != new_ch.updated_at
                 # Character updated
-                console.log "ch", new_ch, "updated"
+                #console.log "ch", new_ch, "updated"
                 @list[ind].update_character(new_ch)
               else if old_ch.nodes_updated_at != new_ch.nodes_updated_at
                 # Character_node updated
-                console.log "ch nodes", new_ch, "updated"
+                #console.log "ch nodes", new_ch, "updated"
                 @list[ind].update_character_nodes(new_ch)
           else
             # not the same number of characters as before
             console.log "Not the same number of characters as before"
-            debugger
+            #console.log characters
             @construct_list()
       # Updates the date for all the characters of the map
       update_date: (new_date)->
@@ -267,7 +273,10 @@ $ ->
         if @node_obj
           @node_obj.destroy()
           delete @node_obj
-        
+      destroy: ->
+        @destroy_node_obj()
+        delete @node
+      
       # Change the date of the character ->
       # it updates his node with this date
       update_date: (new_date) ->
