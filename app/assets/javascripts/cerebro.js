@@ -114,6 +114,7 @@ function init() {
   var $cerebro = $(cerebro);
   var minRatio = 0.5;
   var deltaRatio = 0.1;
+  var delayForceAtlas = 5;
   var sigInst = sigma.init(cerebro).drawingProperties({
     defaultLabelColor: '#fff',
     defaultLabelSize: 14,
@@ -122,7 +123,7 @@ function init() {
     labelThreshold: 6,
     defaultEdgeType: 'curve'
   }).graphProperties({
-    minNodeSize: 0.5,
+    minNodeSize: 1,
     maxNodeSize: 4,
     minEdgeSize: 1,
     maxEdgeSize: 1
@@ -428,7 +429,15 @@ function changeColor(nodes) {
 /*** ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
 	sigInst.myCircularLayout();
 	sigInst.startForceAtlas2();
-	sigInst.activateFishEye();
+	sigInst.deactivateFishEye();
+	setTimeout(function(){
+		isRunning = false;
+		sigInst.stopForceAtlas2();
+		if (fishEyeOn)
+	      	if (Math.abs(sigInst.position().ratio-minRatio) <= deltaRatio )
+	      		sigInst.activateFishEye();
+	    document.getElementById('forceAtlas').childNodes[0].nodeValue = 'Start Layout';
+	}, delayForceAtlas*1000);
 	
   //sigInst.myLayout();
   //sigInst.activateFishEye().draw();

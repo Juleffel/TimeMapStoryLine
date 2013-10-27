@@ -42,6 +42,11 @@ citoy = Group.create!({
   description:"Rien.",
   color:"#5E5"
 })
+secteGrp = Group.create!({
+  name:"Secte",
+  description:"Rien.",
+  color:"#FFF"
+})
 
 # Characters
 haeg = Character.create!({
@@ -258,6 +263,66 @@ loby = Character.create!({
     topic: topics[7],
 })
 
+secteTab = []
+for i in 1..10
+   iStr = i.to_s()
+   secteTab.push(
+        Character.create!({
+        user: pierre,
+        first_name: "Nom"+iStr, last_name: "Prenom"+iStr, 
+        birth_date: "11/11/1987".to_date,
+        birth_place: "Place"+iStr, 
+        sex: i.modulo(2)==0?true:false, 
+        avatar_url: "url"+iStr,
+        avatar_name: "name"+iStr,
+        copyright: "Pidupuis",
+        group: secteGrp,
+        story:
+    %{N.R.},
+        resume:
+    %{N.R.},
+        small_rp:
+    %{N.R.},
+        anecdote:
+    %{N.R.},
+        topic: topics[i],
+    })
+   )
+end
+
+for i in 0...secteTab.length
+  iStr = i.to_s()
+  fp = secteTab[i]
+  for j in i...secteTab.length
+    tp = secteTab[j]
+    Link.create!(
+      {from_character: fp, to_character: tp, title: iStr+"-"+j.to_s(), 
+      description: %{N.R.},
+      force: -50})
+  end
+end
+
+Character.create!({
+        user: pierre,
+        first_name: "Anony", last_name: "Mousse", 
+        birth_date: "11/11/1987".to_date,
+        birth_place: "Anonymous", 
+        sex: false, 
+        avatar_url: "url",
+        avatar_name: "name",
+        copyright: "Pidupuis",
+        group: citoy,
+        story:
+    %{N.R.},
+        resume:
+    %{N.R.},
+        small_rp:
+    %{N.R.},
+        anecdote:
+    %{N.R.},
+        topic: topics[0],
+    })
+
 # Links
 Link.create!([
   {from_character: haeg, to_character: virus, title: "Geek Favoris", 
@@ -295,6 +360,9 @@ Link.create!([
     force: 50},
   {from_character: rusty, to_character: jason, title: "Collègues", 
     description: %{Inqui/Cerber, comme d'hab},
+    force: 60},
+  {from_character: loby, to_character: amo, title: "Tandem de mercenaire", 
+    description: %{Lobner est la tête pensante du binome, il coach et manipule Amosis pour profiter de ses compétences hors du commun.},
     force: 60},
 ])
 
