@@ -150,7 +150,7 @@ function init() {
     node['Last name'] = character.last_name;
     node['Birth date'] = character.birth_date;
     node['Birth place'] = character.birth_place;
-    node['Sex'] = character.sex;
+    node['Sex'] = character.sex?"Homme":"Femme";
     node['Group'] = groups_by_id[character.group_id].name;
     node['About'] = character.anecdote;
     
@@ -258,10 +258,13 @@ function init() {
 					n.hidden = 1;
 				}
 		     }).draw(2,2,2);
+		     updateSearchBox(groupName);
 		}
 		else { // Without selected group name, 
 			sigInst.noFilter(); // We display the entire graph
+			initSearchBox();
 		}
+		
 	};
 	
 /*** END : FILTERS ***/
@@ -339,13 +342,35 @@ function changeColor(nodes) {
 /*** END : LEGEND TO NODE ***/
 
 /*** SEARCH BOX ***/
-    var names = [];
-    sigInst.iterNodes(function(n){ // Iterate nodes to add their names to the search box
-		names.push(n.label);
-	});
+
+	var namesForSearchBox = [];
+	function initSearchBox() {
+    	sigInst.iterNodes(function(n){ // Iterate nodes to add their names to the search box
+			namesForSearchBox.push(n.label);
+		});
+		emptySearchBox();
+	    $('#searchNode').autocomplete({source: namesForSearchBox});
+	}
+	initSearchBox();
+	
+	function updateSearchBox(groupName) {
+		namesForSearchBox = [];
+		sigInst.iterNodes(function(n){ // Iterate nodes to add their names to the search box
+			if (groups_by_id[n.attr['temp']['group_id']].name == groupName) {
+				namesForSearchBox.push(n.label);
+			}
+	    });
+	    emptySearchBox();
+	    $('#searchNode').autocomplete({source: namesForSearchBox});
+	}
+	
+	function emptySearchBox() {
+		document.getElementById('searchNode').value = ""; // We remove this value
+	    document.getElementById('nodeinfo').innerHTML = ""; // We remove the node information displayed
+	    changeColor(null); // We give the default colors
+	}
 	    
     $('#searchNode').autocomplete({ // Autocompletion parameters
-      source: names, // List of character names
       select: function(event, ui){
             document.getElementById('searchNode').value = ui.item.label; // The search box value is changed according to the selected name
             
@@ -365,9 +390,7 @@ function changeColor(nodes) {
     }).keyup(function (e) {
 	    if (e.keyCode == 13) { // System to handle the use of the "Enter" key
 	    	if (names.indexOf(document.getElementById('searchNode').value) < 0) { // If the current value does not correspond to a node name, we consider this as an expected deselection
-	    		document.getElementById('searchNode').value = ""; // We remove this value
-	        	document.getElementById('nodeinfo').innerHTML = ""; // We remove the node information displayed
-	        	changeColor(null); // We give the default colors
+	    		emptySearchBox();
 	        }
 	    }
 	});  		
