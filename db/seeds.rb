@@ -293,7 +293,7 @@ end
 for i in 0...secteTab.length
   iStr = i.to_s()
   fp = secteTab[i]
-  for j in i...secteTab.length
+  for j in i+1...secteTab.length
     tp = secteTab[j]
     Link.create!(
       {from_character: fp, to_character: tp, title: iStr+"-"+j.to_s(), 
