@@ -15,8 +15,8 @@ User.destroy_all
 Topic.destroy_all
 
 # Users
-User.create!({email: "juleffel@hotmail.fr", password: "password"})
-User.create!({email: "amo@caramail.com", password: "plopynounet"})
+ju = User.create!({email: "juleffel@hotmail.fr", password: "password"})
+pierre = User.create!({email: "amo@caramail.com", password: "plopynounet"})
 
 # Topics
 topics = Topic.create!([{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},])
@@ -25,26 +25,27 @@ topics = Topic.create!([{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}
 inqui = Group.create!({
   name:"Inquisition",
   description:"L'Inquisition, c'est la faction des héros, des justifiers, des bienfaiteurs. Elle aime et chérit les citoyens de Tyral comme aucune autre organisationDeCriminels auparavant !",
-  color:"#00AAFF"
+  color:"#A00"
 })
 elli = Group.create!({
   name:"Ellipsis",
   description:"Des cobayes, des mutants, des rebelles. Pas bien original tout ça...",
-  color:"#FFAA00"
+  color:"#0AF"
 })
 defenseur = Group.create!({
   name:"Défenseurs",
   description:"Là où se retrouve tous les grands noms de l'Histoire, tous ces Hommes se battant pour les libertés ! Et oui, car les haches majuscules ne servent pas qu'à couper du bois...",
-  color:"#EEEEEE"
+  color:"#FA0"
 })
 citoy = Group.create!({
   name:"Citoyens",
   description:"Rien.",
-  color:"#BBBBBB"
+  color:"#5E5"
 })
 
 # Characters
 haeg = Character.create!({
+    user: ju,
     first_name: "Haeg", last_name: "Ponak", 
     birth_date: "12/05/1975".to_date,
     birth_place: "1, rue des Winners, Aeranpolis", 
@@ -81,6 +82,7 @@ Des recherches approfondies se déroulèrent plus tard pour répondre à ces deu
     topic: topics[0],
 })
 febay = Character.create!({
+    user: ju,
     first_name: "Febay", last_name: "Karston", 
     birth_date: "15/04/1982".to_date,
     birth_place: "Quelque part dans un bled perdu des States", 
@@ -131,6 +133,7 @@ Après : Il n'a presque pas changé après l'expérience au niveau tenue vestime
     topic: topics[1],
 })
 virus = Character.create!({
+    user: ju,
     first_name: "Pablo", last_name: "Nerudo", 
     birth_date: "12/12/1982".to_date,
     birth_place: "En Espagne", 
@@ -155,6 +158,7 @@ Ainsi Virus VI est-il décrit par Haeg la première fois qu'il entre dans le RP.
     topic: topics[2],
 })
 amo = Character.create!({
+    user: pierre,
     first_name: "Amosis", last_name: "Opilion", 
     birth_date: "11/11/1987".to_date,
     birth_place: "Égypte", 
@@ -174,6 +178,7 @@ amo = Character.create!({
     topic: topics[3],
 })
 jason = Character.create!({
+    user: pierre,
     first_name: "Jason", last_name: "Belham", 
     birth_date: "11/11/1987".to_date,
     birth_place: "Tyral", 
@@ -193,6 +198,7 @@ jason = Character.create!({
     topic: topics[4],
 })
 ursula = Character.create!({
+    user: pierre,
     first_name: "Ursula", last_name: "Cruela Mochtapv", 
     birth_date: "11/11/1987".to_date,
     birth_place: "Russie", 
@@ -212,6 +218,7 @@ ursula = Character.create!({
     topic: topics[5],
 })
 rusty = Character.create!({
+    user: pierre,
     first_name: "Rusty", last_name: "Livingstone", 
     birth_date: "11/11/1987".to_date,
     birth_place: "Tyral", 
@@ -231,6 +238,7 @@ rusty = Character.create!({
     topic: topics[6],
 })
 loby = Character.create!({
+    user: ju,
     first_name: "Alexander", last_name: "Lobner", 
     birth_date: "11/11/1987".to_date,
     birth_place: "Partout", 
@@ -238,7 +246,7 @@ loby = Character.create!({
     avatar_url: "",
     avatar_name: "...",
     copyright: "Juleffel",
-    group:citoy,
+    group:defenseur,
     story:
 %{N.R.},
     resume:

@@ -4,4 +4,6 @@ data: {
   characters_by_id: @characters_by_id,
   links: @links.map(&:json_attributes),
   links_by_id: @links_by_id,
+  groups: @groups.map(&:json_attributes),
+  groups_by_id: @groups_by_id,
 } %>
