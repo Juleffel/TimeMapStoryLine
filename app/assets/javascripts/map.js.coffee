@@ -46,6 +46,7 @@ $ ->
     nodes_by_id = $map.data("nodes-by-id")
     #nodes_by_begin_at = $map.data("nodes-by-begin-at")
     characters = $map.data("characters")
+    console.log(characters)
     characters_by_id = $map.data("characters-by-id")
     characters_updated_at = $map.data("characters-updated-at")
     
@@ -83,9 +84,15 @@ $ ->
           @update_from_server()
         1000)
       
+      destroy_list: ->
+        if @list
+          for character in @list
+            character.destroy()
+        @list = []
+      
       # Destroy and recreate the list of the characters objects
       construct_list: ->
-        @list = []
+        @destroy_list()
         for character in @characters
           @list.push(new Character(character))
         last_date = @last_date         
@@ -101,6 +108,7 @@ $ ->
           dataType: "json"
           success: (data) =>
             nodes_by_id = data.nodes_by_id
+            characters_by_id = data.characters_by_id
             @update(data.characters, data.characters_updated_at)
       # Update only the characters that have been changed since the last fetch
       update: (characters, characters_updated_at)->
@@ -129,6 +137,7 @@ $ ->
           else
             # not the same number of characters as before
             console.log "Not the same number of characters as before"
+            console.log characters
             debugger
             @construct_list()
       # Updates the date for all the characters of the map
@@ -267,7 +276,10 @@ $ ->
         if @node_obj
           @node_obj.destroy()
           delete @node_obj
-        
+      destroy: ->
+        @destroy_node_obj()
+        delete @node
+      
       # Change the date of the character ->
       # it updates his node with this date
       update_date: (new_date) ->

@@ -22,6 +22,7 @@ class NodesController < ApplicationController
       format.json do
         render :json => {
           :characters => @characters.map(&:json_attributes),
+          :characters_by_id => @characters_by_id,
           :characters_updated_at => @characters_updated_at,
           :nodes_by_id => @nodes_by_id
         }
