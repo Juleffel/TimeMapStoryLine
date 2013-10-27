@@ -19,4 +19,6 @@ class Node < ActiveRecord::Base
     end
     hash
   end
+  
+  after_save -> { characters.each(&:touch) }
 end

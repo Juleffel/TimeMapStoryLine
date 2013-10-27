@@ -113,9 +113,10 @@ $ ->
       # Update only the characters that have been changed since the last fetch
       update: (characters, characters_updated_at)->
         @characters = characters
+        console.log characters, characters_updated_at
         if characters_updated_at != @updated_at
           @updated_at = characters_updated_at
-          #console.log "chars updated"
+          console.log "chars updated"
           # A character has changed
           if characters.length == @list.length
             for new_ch, ind in characters
@@ -126,11 +127,11 @@ $ ->
                 break
               if old_ch.updated_at != new_ch.updated_at
                 # Character updated
-                #console.log "ch", new_ch, "updated"
+                console.log "ch", new_ch, "updated"
                 @list[ind].update_character(new_ch)
               else if old_ch.nodes_updated_at != new_ch.nodes_updated_at
                 # Character_node updated
-                #console.log "ch nodes", new_ch, "updated"
+                console.log "ch nodes", new_ch, "updated"
                 @list[ind].update_character_nodes(new_ch)
           else
             # not the same number of characters as before
@@ -401,7 +402,8 @@ $ ->
         )
         @marker.on('dragend', (e) =>
           if @target
-            # Fuuuuusion !            
+            # Fuuuuusion !
+            console.log('Fuuuuusion')     
             concerned_ch_id = null
             if @node.character_ids.length == 1
               concerned_ch_id = @node.character_ids[0]
@@ -440,6 +442,7 @@ $ ->
                 @create_on_server()
             @deselect_target()
           else
+            console.log("Deplacement")
             latlng = @marker.getLatLng()
             @node.latitude = latlng.lat
             @node.longitude = latlng.lng
