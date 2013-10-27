@@ -145,7 +145,7 @@ function init() {
     
     var node = {label: character.name, color: groups_by_id[character.group_id].color}; // Create basic node
 
-    /* Add attributes to node */
+    /* Add character attributes to node */
    	node['First name'] = character.first_name;
     node['Last name'] = character.last_name;
     node['Birth date'] = character.birth_date;
@@ -154,7 +154,8 @@ function init() {
     node['Group'] = groups_by_id[character.group_id].name;
     node['About'] = character.anecdote;
     
-    node['temp'] = [];
+    /* Add other attributes to node */
+    node['temp'] = []; // These attributes will be not displayed as character information !
 	node['temp']['group_id'] = character.group_id;
     node['temp']['true_color'] = node.color;
     
@@ -193,7 +194,7 @@ function init() {
         	L = this.getNodesCount();
  
     	this.iterNodes(function(n){
-			n.x = Math.cos(Math.PI*(i++)/L)*R;
+			n.x = Math.cos(Math.PI*(i++)/L)*R; // Biology is logical, math is magical...
 			n.y = Math.sin(Math.PI*(i++)/L)*R;
     	});
  
@@ -205,26 +206,25 @@ function init() {
 	sigma.publicPrototype.amoFilter = function() {
 		var nodeOfInterest;
 		var neighbors = {};
-		sigInst.iterNodes(function(n){
+		sigInst.iterNodes(function(n){ // Iterate nodes to retrieve the node of interest
 			if (n.label == "Amosis Opilion") {
 				nodeOfInterest = n;
 			}
 	    });
-	    
-	    sigInst.iterEdges(function(e){
+	    sigInst.iterEdges(function(e){ // Iterate edges to retrieve neighbors
 	      if(e.source == nodeOfInterest.id || e.target == nodeOfInterest.id){
 	        neighbors[e.source] = 1;
 	        neighbors[e.target] = 1;
 	      }
-	    }).iterNodes(function(n){
+	    }).iterNodes(function(n){ // Iterate nodes to hide every node which are not a node of interest or a neighbor
 	      if(!neighbors[n.id]){
 	        n.hidden = 1;
 	      }else{
 	        n.hidden = 0;
 	      }
-	    }).iterEdges(function(e){
+	    }).iterEdges(function(e){ // Iterate edges to hide every link which are not from the node of interest
 	    	if (e.source != nodeOfInterest.id && e.target != nodeOfInterest.id) {
-	    		e.hidden = 0;
+	    		e.hidden = 1;
 	    	}
 	    }).draw(2,2,2);
 	};
@@ -241,28 +241,17 @@ function init() {
 	};
 	
 	sigma.publicPrototype.noFilter = function() {
-		sigInst.iterNodes(function(n){
+		sigInst.iterNodes(function(n){ // Iterate nodes to display them
 	      	n.hidden = 0;
-	    }).iterEdges(function(e){
+	   }).iterEdges(function(e){ // Iterate edges to display them
 	      	e.hidden = 0;
 	    }).draw(2,2,2);
 	};
 	
-	sigma.publicPrototype.inquiFilter = function() {
-		sigInst.iterNodes(function(n){
-			if (groups_by_id[n.attr['temp']['group_id']].name == "Inquisition") {
-	      		n.hidden = 0;
-	        }
-			else {
-				n.hidden = 1;
-			}
-	     }).draw(2,2,2);
-	};
-	
 	sigma.publicPrototype.groupFilter = function(groupName) {
-		if (groupName){
-			sigInst.iterNodes(function(n){
-				if (groups_by_id[n.attr['temp']['group_id']].name == groupName) {
+		if (groupName){ // If a group name is selected
+			sigInst.iterNodes(function(n){ // Iterate nodes...
+				if (groups_by_id[n.attr['temp']['group_id']].name == groupName) { // Display node if it comes from the selected group
 		      		n.hidden = 0;
 		        }
 				else {
@@ -270,36 +259,35 @@ function init() {
 				}
 		     }).draw(2,2,2);
 		}
-		else {
-			sigInst.noFilter();
+		else { // Without selected group name, 
+			sigInst.noFilter(); // We display the entire graph
 		}
 	};
-	
 	
 /*** END : FILTERS ***/
   
 /*** GREY COLOR FOR NOT SELECTED NODES ***/
 
 function changeColor(nodes) {
-	if (nodes == null) {
-		sigInst.iterNodes(function(n){
+	if (nodes == null) { // If there is no selected node
+		sigInst.iterNodes(function(n){ // Iterate nodes to give them their default color
 			n.color = n.attr['temp']['true_color'];
-		}).iterEdges(function(e){
+		}).iterEdges(function(e){ // Iterate nodes to give them their default color
 			e.color = defaultColor;
 		}).draw(2,2,2);
 	}
-	else {
+	else { // If a node is selected
 		var neighbors = {};
-    	neighbors[nodes[0]] = 1;
-	    sigInst.iterEdges(function(e){
-	      if(nodes.indexOf(e.source)<0 && nodes.indexOf(e.target)<0){
-	        e.color = deselectColor;
-	      }else{
-	        e.color = defaultColor;
+    	neighbors[nodes[0]] = 1; // The selected node is also stored as its neighbor
+	    sigInst.iterEdges(function(e){ // Iterate edges...
+	      if(nodes.indexOf(e.source)<0 && nodes.indexOf(e.target)<0){ // If this is not a link from the node of interest,
+	        e.color = deselectColor; // We deselect the edge
+	      }else{ // Else,
+	        e.color = defaultColor; // We display the edge and we store the concerned nodes as neighbors
 	        neighbors[e.source] = 1;
 	        neighbors[e.target] = 1;
 	      }
-	    }).iterNodes(function(n){
+	    }).iterNodes(function(n){ // Iterate nodes to display every neighbor with the default color and deselect the others
 	      if(!neighbors[n.id]){
 	        n.color = deselectColor;
 	      }else{
@@ -309,11 +297,11 @@ function changeColor(nodes) {
     }
 }
 
-  sigInst.bind('downnodes',function(event){
+  sigInst.bind('downnodes',function(event){ // On node click
     var nodes = event.content;
-	changeColor(nodes);
+	changeColor(nodes); // We change the graph color according to the selected node
 	
-    sigInst.iterNodes(function(n){
+    sigInst.iterNodes(function(n){ // Iterate node to update the search box according to the selected node name
 		if (n.id == nodes[0]) {
 			document.getElementById('searchNode').value = n.label;
 		}
@@ -323,120 +311,66 @@ function changeColor(nodes) {
 /*** END : GREY COLOR FOR NOT SELECTED NODES ***/
 
 /*** LEGEND TO NODE ***/
- // (function(){
-    //var popUp;
  
    	function attributesToString(attr) {
+   		/* Method which create a list from node information */
    		var attrStr = '<ul>';
   		$.each(attr, function(key, value) {
-  			if (key != "temp") {
+  			if (key != "temp") { // We display only the character information
 				attrStr += '<li>' + key + ' : ' + value + '</li>';
 			}
 		});
         attrStr += '</ul>';
         return attrStr;
     }
- 
-    /*function showNodeInfo(event) {
-      popUp && popUp.remove();
- 
-      var node;
-      sigInst.iterNodes(function(n){
-        node = n;
-      },[event.content[0]]);
-   
-      popUp = $(
-        '<div class="node-info-popup"></div>'
-      ).append(
-        attributesToString( node.attr.attributes )
-      ).attr(
-        'id',
-        'node-info'+sigInst.getID()
-      ).css({
-        'display': 'inline-block',
-        'border-radius': 3,
-        'padding': 5,
-        'background': '#fff',
-        'color': '#000',
-        'box-shadow': '0 0 4px #666',
-        'position': 'absolute',
-        'left': node.displayX,
-        'top': node.displayY+15
-      });
- 
-      $('ul',popUp).css('margin','0 0 0 20px');
- 
-      $cerebro.append(popUp);
-    }
- 
-    function hideNodeInfo(event) {
-      popUp && popUp.remove();
-      popUp = false;
-    }*/
- 	
-    //sigInst.bind('overnodes',showNodeInfo).bind('outnodes',hideNodeInfo).draw();
     
     var divNodeInfo = document.getElementById('nodeinfo');
     
     function showNodeInfo(event) {
- 
+ 	  /* Method which display information according to the selected node */
       var node;
       sigInst.iterNodes(function(n){
         node = n;
       },[event.content[0]]);
-   
 	  divNodeInfo.innerHTML = attributesToString( node.attr );
- 
-      //$cerebro.append(popUp);
     }
     
     sigInst.bind('downnodes',showNodeInfo).draw();
-//  })();
 /*** END : LEGEND TO NODE ***/
 
 /*** SEARCH BOX ***/
-//$(function() {
     var names = [];
-    sigInst.iterNodes(function(n){
+    sigInst.iterNodes(function(n){ // Iterate nodes to add their names to the search box
 		names.push(n.label);
 	});
 	    
-    $('#searchNode').autocomplete({
-      source: names,
+    $('#searchNode').autocomplete({ // Autocompletion parameters
+      source: names, // List of character names
       select: function(event, ui){
-            document.getElementById('searchNode').value = ui.item.label;
+            document.getElementById('searchNode').value = ui.item.label; // The search box value is changed according to the selected name
             
             var node;
-            sigInst.iterNodes(function(n){
+            sigInst.iterNodes(function(n){ // Iterate nodes to retrieve the node corresponding to the selected name
                         if (n.label == event.target.value) {
                                 node = n;
                         }
                 });
                 
-                if (node) {
-                	document.getElementById('nodeinfo').innerHTML = attributesToString( node.attr );
+                if (node) { // If a node is selected,
+                	document.getElementById('nodeinfo').innerHTML = attributesToString( node.attr ); // Display information about it
                 	var nodes = [node.id];
-                	changeColor(nodes);
+                	changeColor(nodes); // Change color according to this selection
                }
-            
-            //showNodeInfo(event);
       }
     }).keyup(function (e) {
-    if (e.keyCode == 13) {
-    	if (names.indexOf(document.getElementById('searchNode').value) < 0) {
-    		document.getElementById('searchNode').value = "";
-        	document.getElementById('nodeinfo').innerHTML = "";
-        	changeColor(null);
-        }
-    }});
-    
-    /*sigInst.bind('downgraph',function(event){
-    	document.getElementById('searchNode').value = "";
-        document.getElementById('nodeinfo').innerHTML = "";
-        changeColor(null);
-    }).draw();*/
-
-//});	  		
+	    if (e.keyCode == 13) { // System to handle the use of the "Enter" key
+	    	if (names.indexOf(document.getElementById('searchNode').value) < 0) { // If the current value does not correspond to a node name, we consider this as an expected deselection
+	    		document.getElementById('searchNode').value = ""; // We remove this value
+	        	document.getElementById('nodeinfo').innerHTML = ""; // We remove the node information displayed
+	        	changeColor(null); // We give the default colors
+	        }
+	    }
+	});  		
 
 /*** END : SEARCH BOX ***/
 
@@ -444,6 +378,12 @@ function changeColor(nodes) {
   document.onmousewheel = function(event){ // On mouse wheel...
   	clearTimeout($.data(this, 'scrollTimer'));
     $.data(this, 'scrollTimer', setTimeout(function() {
+    	/* Function called after 250ms without scrolling.
+    	   The goal here is to handle the end of the scroll to activate or deactivate the fish eye
+    	   according to the current ratio (because a fish eye at the maximum zoom is just insane
+    	   for your eyes, and also for your stomach, and also for your computer which will be
+    	   probably filled by a puddle of your last lunch...)
+    	   */
         var ratio = sigInst.position().ratio; // Retrieve current ratio
 	  	if (Math.abs(ratio-minRatio) <= 0.1 ) {
 	  		sigInst.activateFishEye(); // Activate the fish eye only on max dezoom
@@ -459,6 +399,9 @@ function changeColor(nodes) {
 /*** ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
   sigInst.myLayout();
   sigInst.activateFishEye().draw();
+/*** END : ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
+
+/*** ADD EVENTS ***/
   
 	// Add circular layout to a button
     document.getElementById('circular').addEventListener('click',function(){
@@ -471,32 +414,29 @@ function changeColor(nodes) {
   		setTimeout(function(){sigInst.stopForceAtlas2();},500);
 	},true);
 	
+	// Button filters
 	document.getElementById('amoFilter').addEventListener('click',function(){
     	sigInst.amoFilter();
 	},true);
-	
-	document.getElementById('menFilter').addEventListener('click',function(){
+	/*document.getElementById('menFilter').addEventListener('click',function(){
     	sigInst.sexFilter(true);
 	},true);
-	
 	document.getElementById('womenFilter').addEventListener('click',function(){
     	sigInst.sexFilter(false);
 	},true);
-	
 	document.getElementById('inquiFilter').addEventListener('click',function(){
     	sigInst.inquiFilter();
 	},true);
-	
 	document.getElementById('noFilter').addEventListener('click',function(){
     	sigInst.noFilter();
-	},true);
+	},true);*/
 	
+	// Group list filters
 	document.getElementById('group_name').addEventListener('change',function(){
 		sigInst.groupFilter(this.value);
 	},true);
   
-  
-/*** END : ADD LAYOUT AND PLUG-IN TO CEREBRO ***/
+/*** END : ADD EVENTS ***/
 
 }
  
