@@ -10,14 +10,20 @@ $ ->
   $map = $("#map")
   
   if $map.length
-    map = L.map('map').setView([20, 50], 2)
+    southWest = new L.LatLng(-260, -180)
+    northEast = new L.LatLng(340, 560)
+    bounds = new L.LatLngBounds(southWest, northEast)
+    
+    map = L.map('map', {
+      maxBounds: bounds,
+    }).setView([20, 50], 2)
   
     cloudmade_api_key = $map.data("cloudmade-api-key")
     L.Icon.Default.imagePath = "http://leafletjs.com/dist/images"
     
     L.tileLayer("/assets/carte_arven/{z}/{x}/{y}.png", {
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-        maxZoom: 5,
+        attribution: '&copy; <a href="http://dragonvale.forumactif.org">Dragonvale</a>',
+        maxZoom: 4,
         tms: true,
         continuousWorld: true,
         noWrap: true
