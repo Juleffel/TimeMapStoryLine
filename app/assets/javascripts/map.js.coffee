@@ -14,10 +14,18 @@ $ ->
   
     cloudmade_api_key = $map.data("cloudmade-api-key")
     L.Icon.Default.imagePath = "http://leafletjs.com/dist/images"
-    L.tileLayer("http://{s}.tile.cloudmade.com/#{cloudmade_api_key}/997/256/{z}/{x}/{y}.png", {
+    
+    L.tileLayer("/assets/carte_arven/{z}/{x}/{y}.png", {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+        maxZoom: 5,
+        tms: true,
+        continuousWorld: true,
+        noWrap: true
+    }).addTo(map)
+    ###L.tileLayer("http://{s}.tile.cloudmade.com/#{cloudmade_api_key}/997/256/{z}/{x}/{y}.png", {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
         maxZoom: 18
-    }).addTo(map)
+    }).addTo(map)###
     
     # smallPointIcon
     # middlePointIcon
@@ -113,25 +121,26 @@ $ ->
       # Update only the characters that have been changed since the last fetch
       update: (characters, characters_updated_at)->
         @characters = characters
-        console.log characters, characters_updated_at
+        #console.log characters, characters_updated_at
         if characters_updated_at != @updated_at
           @updated_at = characters_updated_at
-          console.log "chars updated"
+          #console.log "chars updated"
           # A character has changed
           if characters.length == @list.length
             for new_ch, ind in characters
               old_ch = @list[ind].character
               if old_ch.id != new_ch.id
                 # Not the same character at the same position as before
+                console.log "Not the same character at the same position as before"
                 @construct_list()
                 break
               if old_ch.updated_at != new_ch.updated_at
                 # Character updated
-                console.log "ch", new_ch, "updated"
+                #console.log "ch", new_ch, "updated"
                 @list[ind].update_character(new_ch)
               else if old_ch.nodes_updated_at != new_ch.nodes_updated_at
                 # Character_node updated
-                console.log "ch nodes", new_ch, "updated"
+                #console.log "ch nodes", new_ch, "updated"
                 @list[ind].update_character_nodes(new_ch)
           else
             # not the same number of characters as before
@@ -415,6 +424,7 @@ $ ->
               # Update it
               if @node.real
                 # Target and source are real
+                # TODO : two solutions : transfer all or just the main character
                 # Remove character from the source
                 @remove_character(concerned_ch_id)
                 # Update target adding a character
