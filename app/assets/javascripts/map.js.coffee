@@ -35,20 +35,21 @@ $ ->
     
     # smallPointIcon
     # middlePointIcon
+    # http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif
     smallPointIcon = L.icon
-      iconUrl: 'http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif',
-      iconSize: [10, 10],
-      iconAnchor: [5, 5],
-      popupAnchor: [0, -5],
-    mediumPointIcon = L.icon
-      iconUrl: 'http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif',
+      iconUrl: 'http://fortests.chez.com/pa-dv-s2-c1/Croix.png',
       iconSize: [20, 20],
       iconAnchor: [10, 10],
+      popupAnchor: [0, -5],
+    mediumPointIcon = L.icon
+      iconUrl: 'http://fortests.chez.com/pa-dv-s2-c1/Croix.png',
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
       popupAnchor: [0, -10],
     bigPointIcon = L.icon
-      iconUrl: 'http://upload.wikimedia.org/wikipedia/commons/d/d7/Red_Point.gif',
-      iconSize: [30, 30],
-      iconAnchor: [15, 15],
+      iconUrl: 'http://fortests.chez.com/pa-dv-s2-c1/Croix.png',
+      iconSize: [60, 60],
+      iconAnchor: [30, 30],
       popupAnchor: [0, -15],
       #shadowUrl: 'my-icon-shadow.png',
       #shadowRetinaUrl: 'my-icon-shadow@2x.png',
