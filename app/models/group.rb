@@ -6,7 +6,7 @@ class Group < ActiveRecord::Base
   end
   
   def json_attributes
-    attributes
+    attributes.merge({"node_ids" => self.character_ids})
   end
   
   def self.hash_by(key)

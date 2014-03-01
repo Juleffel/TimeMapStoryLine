@@ -18,5 +18,18 @@
 //= require leaflet
 //= require sigma
 //= require sigma.forceatlas
+//= require graph/sigmajs.loadData
+//= require graph/sigmajs.searchNode
+//= require graph/sigmajs.fisheye
+//= require graph/sigmajs.circularLayout
+//= require graph/sigmajs.changeColors
+//= require graph/sigmajs.selectNodes
+//= require graph/sigmajs.buttonFilters
+//= require graph/sigmajs.nodesInfo
+//= require graph/sigmajs.layoutButtons
+//= require graph/sigmajs.events
+//= require graph/cerebro
+
 // require turbolinks
-//= require_tree .
+
+//= require map

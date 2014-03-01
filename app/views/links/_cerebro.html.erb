@@ -1,9 +1,77 @@
-<%= content_tag :div, "", id: "cerebro",
-data: {
-  characters: @characters.map(&:json_attributes),
-  characters_by_id: @characters_by_id,
-  links: @links.map(&:json_attributes),
-  links_by_id: @links_by_id,
-  groups: @groups.map(&:json_attributes),
-  groups_by_id: @groups_by_id,
-} %>
+<div class="hidden-smallphone">
+  <div class="fullscreen">
+    <div class="background">
+      <%= content_tag :div, "", id: "js-graph", 
+            max_node_size: 6,
+            data: {
+              nodes_by_id: @characters_by_id,
+              links_by_id: @links_by_id,
+              type_nodes_by_id: @groups_by_id,
+              type_links_by_id: @type_links_by_id
+            }%>
+    </div>
+    <div class="foreground smalladd center down">
+      <!--<button class="btn" id="circular">Circular layout</button>-->
+      <button class="btn btn-mini btn-success" id="forceAtlas">Stop Layout</button>
+      <!--<button class="btn" id="fishEye">Put Fish Eye ON</button-->
+    </div>
+    <div class="foreground smalladd right up" id="type_node_filters">
+      <span class="tiny-title">Groupes :</span><br>
+      <% @groups_by_id.each do |id, group| %>
+        <% color = group["color"] || '#FFF' %>
+        <%= content_tag :span, group["name"], class: 'tiny-button type_node_'+group["id"].to_s, 
+              value: group["id"], href: "#", style: "color: "+color %><br>
+      <% end %>
+    </div>
+    <div class="foreground smalladd right down" id="type_link_filters">
+      <span class="tiny-title">Types de relations :</span><br>
+      <% @type_links_by_id.each do |id, type_link| %>
+        <% color = type_link["color"] || '#FFF' %>
+        <%= content_tag :span, type_link["name"], class: 'tiny-button', 
+              value: type_link["id"], href: "#", style: "color: "+color %><br>
+      <% end %>
+    </div>
+    <div class="foreground smalladd left up">
+      <div id="searchForm" class="ui-widget">
+        <div class="input-prepend btn-transp">
+          <span class="add-on"><span class="icon-search"></span></span>
+          <input type="search" id="searchNode" placeholder="Recherche..." class="span2" />
+        </div>
+      </div>
+    </div>
+    <div class="foreground smalladd left down" style="bottom: -2px">
+      <small>By <%= mail_to "julien.fleury@ensimag.grenoble-inp.fr", "Julien Fleury" %> & <%= mail_to "pmj.dupuis@gmail.com", "Pierre Dupuis" %>, using <a href=http://sigmajs.org/ target=_blank>sigmajs</a>.</small>
+    </div>
+    <% @characters_by_id.each do |id, character| %>
+      <% @character = character %>
+      <div class="foreground mainadd left up nodeinfo n<%=character["id"]%> js-scrollbar">
+        <%= render "characters/description" %>
+      </div>
+      <div class="foreground mainadd right up nodeinfo n<%=character["id"]%> js-scrollbar" node="n<%=character["id"]%>">
+        <%= render "characters/links_graph" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if false %>
+<div class="visible-smallphone">
+  <div class="container">
+    <h2 class="center">Les acteurs du numérique</h2>
+    <% @nodes.each do |node| %>
+    <% @node = node %>
+    <div class="well" id="mobile_node_desc_<%= node.id %>">
+      <div>
+        <%= render "nodes/description" %>
+      </div>
+      <div>
+        <%= render "nodes/wordcloud", id_add: "mobile" %>
+      </div>
+      <div>
+        <%= render "nodes/links_mobile" %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>
+<% end %>

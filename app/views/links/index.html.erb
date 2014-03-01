@@ -1,23 +1,5 @@
-<h1>Listing links</h1>
 
-<button class="btn" id="circular">Circular layout</button>
-<button class="btn" id="forceAtlas">Stop Layout</button>
-<button class="btn" id="fishEye">Put Fish Eye OFF</button>
-<!--<button class="btn" id="amoFilter">Keep Amo' only</button>
-<button class="btn" id="menFilter">Keep men only</button>
-<button class="btn" id="womenFilter">Keep women only</button>
-<button class="btn" id="inquiFilter">Keep inqui only</button>
-<button class="btn" id="noFilter">No filter</button>-->
-<br /><br />
-<div id="searchForm" class="ui-widget">
-  <label for="searchNode">Name : </label>
-  <input id="searchNode" />
-</div><br />
-<%= collection_select :group, :name, Group.all, :name, :name, {:include_blank => true} %>
-<br /><br />
 <%= render "links/cerebro"%>
-
-<div id="nodeinfo"></div>
 
 <table>
   <thead>

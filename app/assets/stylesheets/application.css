@@ -16,3 +16,31 @@
  *= require leaflet
  *= require_tree .
  */
+.invisible {
+  display: none;
+}
+.center {
+  text-align: center;
+}
+.justify {
+  text-align: justify;
+}
+.right {
+  text-align: right;
+}
+@media (max-width: 400px) {
+  .visible-smallphone {
+    display: block;
+  }
+  .hidden-smallphone {
+    display: none;
+  }
+}
+@media (min-width: 401px) {
+  .visible-smallphone {
+    display: none;
+  }
+  .hidden-smallphone {
+    display: block;
+  }
+}
