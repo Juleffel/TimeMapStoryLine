@@ -21,5 +21,5 @@ sigma.publicPrototype.circularLayout = function (rand) {
     n.y = Math.sin(2 * Math.PI * ind / L) * R;
   });
 
-  return this.position(0, 0, 1).draw();
+  return this.position(-24, 42, zoom_min).draw();
 };

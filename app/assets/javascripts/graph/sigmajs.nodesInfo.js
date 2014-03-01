@@ -9,7 +9,7 @@ sigma.publicPrototype.showNodeinfo = function (node_id) {
   if ($popup.length) {
     $popup.addClass('active');
     $('.fullscreen').addClass('to-right');
-    sigInst.position(0, 0, 1);
+    sigInst.position(0, 0, zoom_min);
     sigInst.activateFishEye().draw();
   }
 };
