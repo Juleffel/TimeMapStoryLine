@@ -45,9 +45,9 @@ function init() {
   sigInst.bindEvents();
   sigInst.nodeInfoLinksInit();
 	/*** END : LAUNCH MODULES ***/
-	setInterval(function() {
+	/*setInterval(function() {
 	  console.log(sigInst.position());
-	}, 100);
+	}, 100);*/
 }
 
 if (document.addEventListener) {
