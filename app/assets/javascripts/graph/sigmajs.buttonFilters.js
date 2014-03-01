@@ -9,7 +9,7 @@ sigma.publicPrototype.noFilter = function () {
 };
 
 sigma.publicPrototype.nodeIsVisible = function(node, ratio) {
-  return ratio >= 1 + node.attr.temp.depth * 0.5;
+  return ratio >= zoom_min + node.attr.temp.depth * 0.5;
 };
 
 // Node filter

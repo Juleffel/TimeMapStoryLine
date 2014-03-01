@@ -1,9 +1,14 @@
 function init() {
+	/*** VARIABLES ***/
+	zoom_min = 0.9;
+	zoom_max = 4;
+	
 	var cerebro = document.getElementById('js-graph');
 	if (cerebro == null) return;
 	
 	/*** CEREBRO INSTANTIATION ***/
 	//var defaultColor = 'rgb(119,221,119)';
+	
 	var $cerebro = $(cerebro);
 	var sigInst = sigma.init(cerebro).drawingProperties({
 		defaultLabelColor: '#fff',
@@ -19,8 +24,8 @@ function init() {
 		minEdgeSize: 1,
 		maxEdgeSize: $cerebro.attr('max_edge_size') || 2,
 	}).mouseProperties({
-		maxRatio: 5, // Max zoom
-		minRatio: 1 // Max dezoom
+		maxRatio: zoom_max, // Max zoom
+		minRatio: zoom_min // Max dezoom
 	});
 	sigInst.deselectColor = '#000';
 	sigInst.focusedNode = null;
