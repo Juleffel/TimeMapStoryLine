@@ -2,6 +2,8 @@ function init() {
 	/*** VARIABLES ***/
 	zoom_min = 0.9;
 	zoom_max = 4;
+	init_x = -24;
+	init_y = 42;
 	
 	var cerebro = document.getElementById('js-graph');
 	if (cerebro == null) return;

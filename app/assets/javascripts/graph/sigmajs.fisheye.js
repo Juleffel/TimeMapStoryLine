@@ -59,7 +59,7 @@
 
     // this.refresh() is just a helper to draw the graph.
     this.refresh = function () {
-      sig.draw(2, 2, 2);
+      sig.draw();
     };
   };
 
