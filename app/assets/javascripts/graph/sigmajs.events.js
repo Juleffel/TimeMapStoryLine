@@ -13,6 +13,9 @@ sigma.publicPrototype.bindEvents = function () {
   
   /*** ACTIONS ON GRAPH EVENTS ***/
   function submitNewInteraction() {
+  	
+  }
+  function cancelNewInteraction() {
   	popUp && popUp.remove();
   }
   mouseDownOvernodes = function(e) {
@@ -38,7 +41,7 @@ sigma.publicPrototype.bindEvents = function () {
   	//		- if the node is the same as mousedown, we display it info
   	//		- if the node is a second one, we create a link between the two nodes
   	
-  	if (selectedNode2Name == null) {
+  	if (selectedNode2Name == null || selectedNode2Name == selectedNodeName) {
   		sigInst.hideNodeinfo();
     	sigInst.showNodeinfo(selectedNodeName);
   	}
@@ -59,9 +62,9 @@ sigma.publicPrototype.bindEvents = function () {
   		popUp = $(
           '<div class="node-info-popup"></div>'
         ).append(
-          "Vous souhaitez créer un lien entre "+selectedNode.label+ " et "+selectedNode2.label+" ?"+
-          '<br /><button id="submitNewInt">Confirmer</button>'
-        ).attr(
+      		"Vous souhaitez créer un lien entre "+selectedNode.label+ " et "+selectedNode2.label+" ?"+
+      		'<br /><button id="submitNewInt">Confirmer</button>'+'<button id="cancelNewInt">Annuler</button>'
+    	).attr(
           'id',
           'link-creation'+sigInst.getID()
         ).css({
@@ -77,6 +80,12 @@ sigma.publicPrototype.bindEvents = function () {
         });
         
         $(document.getElementById('js-graph')).append(popUp);
+        
+	    $('#submitNewInt').click(submitNewInteraction);
+	    $('#cancelNewInt').click(cancelNewInteraction);
+  		
+        
+        
   		
   	}
     
