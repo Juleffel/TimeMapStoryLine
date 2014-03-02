@@ -15,16 +15,13 @@ sigma.publicPrototype.bindEvents = function ($data_container) {
   function submitNewInteraction() {
   
   	var nodes_by_id = $data_container.data('nodes-by-id');
-  	console.log(nodes_by_id);
-  	console.log(selectedNode);
-  	console.log(selectedNode2);
 	$.ajax({
         type: "POST",
         url:  "/links",
         data: {link:{from_character_id: selectedNode.attr.temp.node_id,
         	to_character_id: selectedNode2.attr.temp.node_id,
-        	title: "Titre", 
-    		description: "Text",
+        	title: $('#link_title').val(), 
+    		description: $('#link_descript').val(),
     		force: 50}}
       }).done(function( data ) {
       	 location.reload();
@@ -76,6 +73,8 @@ sigma.publicPrototype.bindEvents = function ($data_container) {
           '<div class="node-info-popup"></div>'
         ).append(
       		"Vous souhaitez créer un lien entre "+selectedNode.label+ " et "+selectedNode2.label+" ?"+
+      		'<br />Titre du lien : <input id="link_title" type="text" placeholder="Entrez un titre">'+
+      		'<br />Description : <input id="link_descript" type="text" placeholder="Entrez une description">'+
       		'<br /><button id="submitNewInt">Confirmer</button>'+'<button id="cancelNewInt">Annuler</button>'
     	).attr(
           'id',
