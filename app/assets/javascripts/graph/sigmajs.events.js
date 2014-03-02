@@ -1,4 +1,4 @@
-sigma.publicPrototype.bindEvents = function () {
+sigma.publicPrototype.bindEvents = function ($data_container) {
   dom = document.querySelector('#js-graph canvas:last-child');
   edgeCanvas = document.querySelector('#sigma_hover_1');
   ctx = edgeCanvas.getContext('2d');
@@ -13,7 +13,22 @@ sigma.publicPrototype.bindEvents = function () {
   
   /*** ACTIONS ON GRAPH EVENTS ***/
   function submitNewInteraction() {
-  	
+  
+  	var nodes_by_id = $data_container.data('nodes-by-id');
+  	console.log(nodes_by_id);
+  	console.log(selectedNode);
+  	console.log(selectedNode2);
+	$.ajax({
+        type: "POST",
+        url:  "/links",
+        data: {link:{from_character_id: selectedNode.attr.temp.node_id,
+        	to_character_id: selectedNode2.attr.temp.node_id,
+        	title: "Titre", 
+    		description: "Text",
+    		force: 50}}
+      }).done(function( data ) {
+      	 location.reload();
+      });
   }
   function cancelNewInteraction() {
   	popUp && popUp.remove();
@@ -56,8 +71,6 @@ sigma.publicPrototype.bindEvents = function () {
 		      selectedNode2 = n;
 		    }
 		  });
-  		console.log(selectedNode);
-  		console.log(selectedNode2);
   		
   		popUp = $(
           '<div class="node-info-popup"></div>'
@@ -75,6 +88,7 @@ sigma.publicPrototype.bindEvents = function () {
           'color': '#000',
           'box-shadow': '0 0 4px #666',
           'position': 'absolute',
+          'z-index': 10,
           'left': selectedNode.displayX,
           'top': selectedNode.displayY+15
         });

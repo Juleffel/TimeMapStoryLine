@@ -23,6 +23,7 @@ sigma.publicPrototype.loadData = function ($data_container) {
       
       /* Add other attributes to node */
       g_node['temp'] = []; // These attributes will be not displayed as character information !
+      g_node['temp']['node_id'] = node.id;
       g_node['temp']['type_node_id'] = type_node_id;
       g_node['temp']['true_color'] = color;
       g_node['temp']['depth'] = node.depth;

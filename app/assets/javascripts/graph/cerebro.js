@@ -44,7 +44,7 @@ function init() {
 	sigInst.typeNodeFilter();
 	sigInst.typeLinkFilter();
 	sigInst.layoutButtons();
-  sigInst.bindEvents();
+  sigInst.bindEvents($cerebro);
   sigInst.nodeInfoLinksInit();
 	/*** END : LAUNCH MODULES ***/
 	/*setInterval(function() {
