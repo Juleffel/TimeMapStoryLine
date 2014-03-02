@@ -17,6 +17,7 @@
 // require jquery-ui-bootstrap
 //= require leaflet
 //= require sigma
+//= require sigma.utils
 //= require sigma.forceatlas
 //= require graph/sigmajs.loadData
 //= require graph/sigmajs.searchNode
