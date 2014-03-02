@@ -12,20 +12,26 @@ sigma.publicPrototype.bindEvents = function () {
   var popUp;
   
   /*** ACTIONS ON GRAPH EVENTS ***/
-   function submitNewInteraction() {
+  function submitNewInteraction() {
   	popUp && popUp.remove();
   }
   mouseDownOvernodes = function(e) {
   	// When clic on node without release : start line drawing
   	popUp && popUp.remove();
   	mouseDown = true;
+  	
+  	sigInst.iterNodes(function (n) {
+	    if (n.id == selectedNodeName) {
+	      selectedNode = n;
+	    }
+	  });
 	
 	letsdraw = true;
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 1;
     ctx.lineCap = 'round';
-    debX = e.pageX;
-    debY = e.pageY;
+    debX = selectedNode.displayX;//e.pageX;
+    debY = selectedNode.displayY;//e.pageY;
   };
   mouseUpOvernodes = function(e) {
   	// When release clic on node :
@@ -54,7 +60,7 @@ sigma.publicPrototype.bindEvents = function () {
           '<div class="node-info-popup"></div>'
         ).append(
           "Vous souhaitez créer un lien entre "+selectedNode.label+ " et "+selectedNode2.label+" ?"+
-          '<br /><button onclick="">Confirmer</button>'
+          '<br /><button id="submitNewInt">Confirmer</button>'
         ).attr(
           'id',
           'link-creation'+sigInst.getID()
@@ -69,8 +75,9 @@ sigma.publicPrototype.bindEvents = function () {
           'left': selectedNode.displayX,
           'top': selectedNode.displayY+15
         });
+        
+        $(document.getElementById('js-graph')).append(popUp);
   		
-  		$(document.getElementById('js-graph')).append(popUp);
   	}
     
     // At the end of mouse release, we return at the beginning state 
