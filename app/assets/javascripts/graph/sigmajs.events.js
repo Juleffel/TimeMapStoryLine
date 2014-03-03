@@ -123,9 +123,9 @@ sigma.publicPrototype.bindEvents = function ($data_container) {
   	}
   };
   mouseDownOutnodes = function(e) {
-  	if( e.which == 1 ) {
+  	/*if( e.which == 1 ) {
   		popUp && popUp.remove();
-    }
+    }*/
   };
   mouseUpOutnodes = function(e) {
   	if( e.which == 1 ) {
