@@ -15,8 +15,11 @@ class Character < ActiveRecord::Base
   
   default_scope -> {order(:id)}
   
-  def to_s
+  def name
     (first_name || '') + ' ' + (last_name || '')
+  end
+  def to_s
+    name
   end
   
   def nodes_updated_at

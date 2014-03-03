@@ -2,14 +2,19 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <%= f.association :from_character %>
-    <%= f.association :to_character %>
+    <% unless @not_from_to %>
+      <%= f.association :from_character %>
+      <%= f.association :to_character %>
+    <% end %>
     <%= f.input :title %>
     <%= f.input :description %>
     <%= f.input :force %>
   </div>
 
   <div class="form-actions">
-    <%= f.button :submit %>
+    <%= f.button :submit, class:"btn" %>
   </div>
+  <% if !f.object.new_record? %>
+    <%= link_to 'Destroy', f.object, method: :delete, data: { confirm: 'Are you sure?' }, class:"btn btn-danger" %>
+  <% end %>
 <% end %>
