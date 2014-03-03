@@ -14,24 +14,6 @@ sigma.publicPrototype.bindEvents = function ($data_container) {
   var popUp;
   
   /*** ACTIONS ON GRAPH EVENTS ***/
-  function submitNewInteraction() {
-  
-  	var nodes_by_id = $data_container.data('nodes-by-id');
-	$.ajax({
-        type: "POST",
-        url:  "/links",
-        data: {link:{from_character_id: selectedNode.attr.temp.node_id,
-        	to_character_id: selectedNode2.attr.temp.node_id,
-        	title: $('#link_title').val(), 
-    		description: $('#link_descript').val(),
-    		force: 50}}
-      }).done(function( data ) {
-      	 location.reload();
-      });
-  }
-  function cancelNewInteraction() {
-  	popUp && popUp.remove();
-  }
   mouseDownOvernodes = function(e) {
   	if( e.which == 1 ) {
   	   	  selectedNodeName = overNodeName;
@@ -74,42 +56,12 @@ sigma.publicPrototype.bindEvents = function ($data_container) {
 	  	else {
 	  		console.log("Link creation between "+selectedNodeName+ " and "+selectedNode2Name);
 	  		
-	  		sigInst.iterNodes(function (n) {
-			    if (n.id == selectedNodeName) {
-			      selectedNode = n;
-			    }
-			    else if (n.id == selectedNode2Name) {
-			      selectedNode2 = n;
-			    }
-			  });
-	  		
-	  		popUp = $(
-	          '<div class="node-info-popup"></div>'
-	        ).append(
-	      		"Vous souhaitez créer un lien entre "+selectedNode.label+ " et "+selectedNode2.label+" ?"+
-	      		'<br />Titre du lien : <input id="link_title" type="text" placeholder="Entrez un titre">'+
-	      		'<br />Description : <input id="link_descript" type="text" placeholder="Entrez une description">'+
-	      		'<br /><button id="submitNewInt">Confirmer</button>'+'<button id="cancelNewInt">Annuler</button>'
-	    	).attr(
-	          'id',
-	          'link-creation'+sigInst.getID()
-	        ).css({
-	          'display': 'inline-block',
-	          'border-radius': 3,
-	          'padding': 5,
-	          'background': '#fff',
-	          'color': '#000',
-	          'box-shadow': '0 0 4px #666',
-	          'position': 'absolute',
-	          'z-index': 10,
-	          'left': '50%',
-	          'top': '50%'
-	        });
-	        
-	        $(document.getElementById('js-graph')).append(popUp);
-	        
-		    $('#submitNewInt').click(submitNewInteraction);
-		    $('#cancelNewInt').click(cancelNewInteraction);
+	  		$(".linkpopup"+"."+selectedNodeName+"."+selectedNode2Name).each(function () {
+	  			if ($(this).attr('class').indexOf(selectedNodeName+" "+selectedNode2Name) >= 0) {
+	  				console.log($(this));
+	  				$(this).toggleClass("active");
+	  			}
+	  		});
 
 	  	}
 	    
@@ -123,9 +75,6 @@ sigma.publicPrototype.bindEvents = function ($data_container) {
   	}
   };
   mouseDownOutnodes = function(e) {
-  	/*if( e.which == 1 ) {
-  		popUp && popUp.remove();
-    }*/
   };
   mouseUpOutnodes = function(e) {
   	if( e.which == 1 ) {
