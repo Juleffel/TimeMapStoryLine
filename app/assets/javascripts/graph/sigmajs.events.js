@@ -9,6 +9,8 @@ sigma.publicPrototype.bindEvents = function ($data_container) {
   mouseDown = false;
   selectedNodeName = null;
   selectedNode2Name = null;
+  selectedNode = null;
+  selectedNode2 = null;
   var popUp;
   
   /*** ACTIONS ON GRAPH EVENTS ***/
@@ -36,10 +38,10 @@ sigma.publicPrototype.bindEvents = function ($data_container) {
   	mouseDown = true;
   	
   	sigInst.iterNodes(function (n) {
-	    if (n.id == selectedNodeName) {
-	      selectedNode = n;
-	    }
-	  });
+		if (n.id == selectedNodeName) {
+			selectedNode = n;
+		}
+	});
 	
 	letsdraw = true;
     ctx.strokeStyle = 'white';
@@ -88,8 +90,8 @@ sigma.publicPrototype.bindEvents = function ($data_container) {
           'box-shadow': '0 0 4px #666',
           'position': 'absolute',
           'z-index': 10,
-          'left': selectedNode.displayX,
-          'top': selectedNode.displayY+15
+          'left': selectedNode2.displayX,
+          'top': selectedNode2.displayY+15
         });
         
         $(document.getElementById('js-graph')).append(popUp);
@@ -210,7 +212,28 @@ sigma.publicPrototype.bindEvents = function ($data_container) {
     $.data(this, 'scrollTimer', setTimeout(function () {
       /* Function called after 250ms without scrolling. */
       sigInst.updateTypeNodeFilter();
+    
+    
     }, 250));
+    clearTimeout($.data(this, 'scrollTimer'));
+    $.data(this, 'scrollTimer', setTimeout(function () {
+      /* Function called after 100ms without scrolling. */  
+      if (mouseDown == true) {
+  		sigInst.iterNodes(function (n) {
+			if (n.id == selectedNodeName) {
+				selectedNode = n;
+			}
+		});
+  		
+  		console.log(selectedNode.displayX+" "+selectedNode.displayY);
+  		// Voir pour choper un update de selectedNode, en bouclant sur les noeuds pour recup le noeud qui a le meme id
+	    debX = selectedNode.displayX;//e.pageX;
+	    debY = selectedNode.displayY;//e.pageY;
+  	  }
+    }, 250));
+    
+    
+    
   };
   /*** END : REFRESH NODES ***/
  
