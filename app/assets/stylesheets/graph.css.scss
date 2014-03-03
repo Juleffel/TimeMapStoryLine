@@ -42,6 +42,18 @@
 .fullscreen .mainadd.foreground {
   z-index: 2;
 }
+.fullscreen .popup.foreground {
+  z-index: 3;
+}
+.fullscreen .popup {
+  width: 40%;
+  left: 30%;
+  top: -70%;
+  max-height: 60%;
+}
+.fullscreen .popup.active {
+  top: 20%;
+}
 .fullscreen .foreground,
 .fullscreen .sidepanel,
 .fullscreen .title {

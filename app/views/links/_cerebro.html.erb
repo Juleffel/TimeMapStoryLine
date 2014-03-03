@@ -17,18 +17,18 @@
     </div>
     <div class="foreground smalladd right up" id="type_node_filters">
       <span class="tiny-title">Groupes :</span><br>
-      <% @groups_by_id.each do |id, group| %>
-        <% color = group["color"] || '#FFF' %>
-        <%= content_tag :span, group["name"], class: 'tiny-button type_node_'+group["id"].to_s, 
-              value: group["id"], href: "#", style: "color: "+color %><br>
+      <% @groups.each do |group| %>
+        <% color = group.color || '#FFF' %>
+        <%= content_tag :span, group.name, class: 'tiny-button type_node_'+group.id.to_s, 
+              value: group.id, href: "#", style: "color: "+color %><br>
       <% end %>
     </div>
     <div class="foreground smalladd right down" id="type_link_filters">
       <span class="tiny-title">Types de relations :</span><br>
       <% @type_links_by_id.each do |id, type_link| %>
-        <% color = type_link["color"] || '#FFF' %>
-        <%= content_tag :span, type_link["name"], class: 'tiny-button', 
-              value: type_link["id"], href: "#", style: "color: "+color %><br>
+        <% color = type_link[:color] || '#FFF' %>
+        <%= content_tag :span, type_link[:name], class: 'tiny-button', 
+              value: type_link[:id], href: "#", style: "color: "+color %><br>
       <% end %>
     </div>
     <div class="foreground smalladd left up">
@@ -42,36 +42,40 @@
     <div class="foreground smalladd left down" style="bottom: -2px">
       <small>By <%= mail_to "julien.fleury@ensimag.grenoble-inp.fr", "Julien Fleury" %> & <%= mail_to "pmj.dupuis@gmail.com", "Pierre Dupuis" %>, using <a href=http://sigmajs.org/ target=_blank>sigmajs</a>.</small>
     </div>
-    <% @characters_by_id.each do |id, character| %>
+    <% @characters.each do |character| %>
       <% @character = character %>
-      <div class="foreground mainadd left up nodeinfo n<%=character["id"]%> js-scrollbar">
+      <div class="foreground mainadd left up nodeinfo n<%=character.id%> js-scrollbar">
         <%= render "characters/description" %>
       </div>
-      <div class="foreground mainadd right up nodeinfo n<%=character["id"]%> js-scrollbar" node="n<%=character["id"]%>">
+      <div class="foreground mainadd right up nodeinfo n<%=character.id%> js-scrollbar" node="n<%=character.id%>">
         <%= render "characters/links_graph" %>
+      </div>
+    <% end %>
+    <% @not_from_to = true %>
+    <% @all_links.each do |link| %>
+      <% @link = link %>
+      <div class="foreground well popup linkpopup n<%=link.from_character_id%> n<%=link.to_character_id%>">
+        <%= render 'links/form' %>
+        <%= link_to 'Back', '#', class:"btn btn-default" %>
       </div>
     <% end %>
   </div>
 </div>
 
-<% if false %>
 <div class="visible-smallphone">
   <div class="container">
     <h2 class="center">Les acteurs du numérique</h2>
-    <% @nodes.each do |node| %>
-    <% @node = node %>
-    <div class="well" id="mobile_node_desc_<%= node.id %>">
+    <% @characters.each do |character| %>
+    <% @character = character %>
+    <div class="well" id="mobile_node_desc_<%= character.id %>">
       <div>
-        <%= render "nodes/description" %>
+        <%= render "characters/description" %>
       </div>
       <div>
-        <%= render "nodes/wordcloud", id_add: "mobile" %>
-      </div>
-      <div>
-        <%= render "nodes/links_mobile" %>
+        <%= render "characters/links_mobile" %>
       </div>
     </div>
     <% end %>
   </div>
 </div>
-<% end %>
+
