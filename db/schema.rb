@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20131026184813) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "characters", force: true do |t|
     t.integer  "user_id"
     t.string   "first_name"
@@ -30,11 +33,19 @@ ActiveRecord::Schema.define(version: 20131026184813) do
     t.text     "anecdote"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "faction_id"
     t.integer  "group_id"
   end
 
   add_index "characters", ["topic_id"], name: "index_characters_on_topic_id", using: :btree
   add_index "characters", ["user_id"], name: "index_characters_on_user_id", using: :btree
+
+  create_table "factions", force: true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "groups", force: true do |t|
     t.string   "name"
