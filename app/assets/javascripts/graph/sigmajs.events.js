@@ -56,11 +56,19 @@ sigma.publicPrototype.bindEvents = function ($data_container) {
 	  	else {
 	  		console.log("Link creation between "+selectedNodeName+ " and "+selectedNode2Name);
 	  		
-	  		$(".linkpopup"+"."+selectedNodeName+"."+selectedNode2Name).each(function () {
-	  			if ($(this).attr('class').indexOf(selectedNodeName+" "+selectedNode2Name) >= 0) {
-	  				console.log($(this));
-	  				$(this).toggleClass("active");
-	  			}
+	  		var $popUp = $(".linkpopup"+".f"+selectedNodeName+".t"+selectedNode2Name);
+	  		if ($popUp.length == 0) {
+	  			$popUp = $(".linkpopup.popup-new");
+	  			$popUp.find(".js-from-node").val(selectedNodeName.slice(1));
+	  			$popUp.find(".js-to-node").val(selectedNode2Name.slice(1));
+	  		}
+	  		//console.log($popUp);
+	  		//console.log($popUp.html());
+	  		$popUp.addClass("active");
+	  		$popUp.find('.js-close').click(function(e) {
+	  			e.preventDefault();
+	  			$popUp.removeClass('active');
+	  			return false;
 	  		});
 
 	  	}

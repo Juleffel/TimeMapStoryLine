@@ -2,7 +2,11 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <% unless @not_from_to %>
+    <% if @not_from_to %>
+      <%= f.hidden_field :from_character_id, class: "js-from-node" %>
+      <%= f.hidden_field :to_character_id, class: "js-to-node" %>
+      <%= hidden_field_tag :from_cerebro, true %>
+    <% else %>
       <%= f.association :from_character %>
       <%= f.association :to_character %>
     <% end %>

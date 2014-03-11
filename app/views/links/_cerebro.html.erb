@@ -52,11 +52,13 @@
       </div>
     <% end %>
     <% @not_from_to = true %>
-    <% @all_links.each do |link| %>
+    <% [@links, Link.new].flatten.each do |link| %>
       <% @link = link %>
-      <div class="foreground well popup linkpopup n<%=link.from_character_id%> n<%=link.to_character_id%>">
+      <div class="foreground well popup linkpopup 
+          <%= if link.new_record? then "popup-new" else "popup-edit" end %> 
+          fn<%=link.from_character_id%> tn<%=link.to_character_id%>">
         <%= render 'links/form' %>
-        <%= link_to 'Back', '#', class:"btn btn-default" %>
+        <%= link_to 'Back', '#', class:"btn btn-default js-close" %>
       </div>
     <% end %>
   </div>

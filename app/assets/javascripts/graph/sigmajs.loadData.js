@@ -29,7 +29,7 @@ sigma.publicPrototype.loadData = function ($data_container) {
       g_node['temp']['depth'] = node.depth;
 
       sigInst.addNode('n' + node.id, g_node);
-      console.log("addNode:", g_node);
+      //console.log("addNode:", g_node);
     }
   }
 
@@ -63,7 +63,7 @@ sigma.publicPrototype.loadData = function ($data_container) {
         'n' + link.node_to_id,
         g_edge
       );
-      console.log("addEdge:", g_edge);
+      //console.log("addEdge:", g_edge);
     }
   }
   sigInst.draw();
