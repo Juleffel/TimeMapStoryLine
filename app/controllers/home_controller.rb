@@ -18,19 +18,6 @@ class HomeController < ApplicationController
       }
     }
     
-    @all_links = []
-    @characters.each do |from_character|
-      @characters.each do |to_character|
-        if from_character != to_character
-          link = Link.where(from_character: from_character, to_character: to_character).first
-          if link == nil
-            link = Link.new(from_character: from_character, to_character: to_character)
-          end
-          @all_links << link
-        end
-      end
-    end
-    
     @without_container = true
   end
 end
